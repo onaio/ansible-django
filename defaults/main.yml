@@ -1,0 +1,118 @@
+# user
+system_user: "django"
+system_group: "www-data"
+system_user_home: "/home/{{ system_user }}"
+
+# git
+git_url:
+git_branch: "master"
+git_key:
+
+# system-wide dependencies
+python_source_version: "3.6"
+python_version: "python3.6"  # or python3.x
+system_wide_dependencies:
+  - build-essential
+  - git
+  - python3.6-dev
+
+# service
+service_name: "{{ system_user }}"
+service_type: "notify"
+service_restart: "on-failure"
+service_group: "{{ system_group }}"
+service_unit_after: "network.target"
+service_install_wantedby: "multi-user.target"
+pid_socks_dir: "/var/run/{{ service_name }}"
+
+env_name: "prod"
+codebase_path: "{{ system_user_home }}/app"
+versioned_path: "{{ codebase_path }}-versioned"
+checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
+venv_path: "{{ system_user_home }}/.virtualenvs/{{ system_user }}"
+log_path: "/var/log/{{ service_name }}"
+pid_file: "{{ pid_socks_dir }}/{{ service_name }}.pid"
+proxy_read_timeout: "300s"
+
+# pip
+recreate_virtual_env: False
+pip_paths:
+  - "{{ checkout_path }}/requirements.txt"
+## other pip packages not in requirements files
+pip_packages:
+  - celery
+  - uwsgi
+
+# Django
+local_settings_path:
+django_init_commands:
+  - migrate --noinput
+  - collectstatic --noinput
+static_path: "/var/www/static/"
+media_path: "/var/www/media/"
+django_settings_module:
+
+## Django settings
+django_settings:
+  BASE_DIR: "os.path.dirname(os.path.dirname(__file__))"
+  SITE_ID: 1
+  DATABASES: |
+    {
+      'default': {
+          'ENGINE': 'django.db.backends.sqlite3',
+          'NAME': 'sqlite3.db',
+      }
+    }
+  STATICFILES_DIRS: |
+    (
+        os.path.join(BASE_DIR, "static"),
+    )
+  CACHES: |
+    {
+      'default': {
+          'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+      }
+    }
+  STATIC_ROOT: "'{{ static_path }}'"
+  STATIC_URL: "'/static/'"
+  MEDIA_ROOT: "'{{ media_path }}'"
+  MEDIA_URL: "'/media/'"
+  EMAIL_BACKEND: "'django.core.mail.backends.console.EmailBackend'"
+  EMAIL_HOST: "'localhost'"
+  EMAIL_PORT: "1025"
+  DEFAULT_FROM_EMAIL: "'Hello World <hello@example.com>'"
+  ALLOWED_HOSTS: "[]"
+  DEBUG: True
+
+# wsgi
+wsgi_module:
+wsgi_processes: 3
+wsgi_harakiri: 240
+wsgi_max_requests: 5000
+wsgi_http:
+wsgi_socket: "{{ pid_socks_dir }}/{{ service_name }}.sock"
+wsgi_chmod_socket: 777
+wsgi_user: "{{ system_user }}"
+wsgi_group: "www-data"
+wsgi_vacuum: True
+wsgi_master: True
+wsgi_logto: "{{ log_path }}/uwsgi_{{ service_name }}.log"
+wsgi_virtualenv: "{{ venv_path }}"
+wsgi_static_map: "/static={{ static_path }}"
+wsgi_buffer_size: 8192
+wsgi_env: "HTTPS=on"
+wsgi_stats: "{{ pid_socks_dir }}/{{ service_name }}_stats.sock"
+wsgi_enable_threads: False
+wsgi_memory_report: False
+
+# celery
+enable_celery: True
+celery_app:
+celeryd_nodes: "{{ service_name }}"
+celeryd_service_name: "celeryd-{{ service_name }}"
+celerybeat_service_name: "celerybeat-{{ service_name }}"
+celeryd_opts: "--time-limit=300 --concurrency=8"
+celeryd_log_level: "INFO"
+celerybeat_log_level: "INFO"
+celeryd_pid_file:
+celery_beat_pid_file:

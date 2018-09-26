@@ -1,0 +1,30 @@
+---
+- name: Copy celeryd default script
+  template:
+    src: templates/etc/default/celeryd.j2
+    dest: /etc/default/celeryd-{{ system_user }}
+    mode: 0644
+
+- name: Copy celerybeat default script
+  template:
+    src: templates/etc/default/celerybeat.j2
+    dest: /etc/default/celerybeat-{{ system_user }}
+    mode: 0644
+
+- name: Copy celeryd upstart script
+  template:
+    src: "etc/systemd/celeryd.service.j2"
+    dest: "/etc/systemd/system/{{ celeryd_service_name }}.service"
+    mode: 0644
+  notify:
+    - reload systemctl
+    - restart_celery
+
+- name: Copy celerybeat upstart script
+  template:
+    src: "etc/systemd/celerybeat.service.j2"
+    dest: "/etc/systemd/system/{{ celerybeat_service_name }}.service"
+    mode: 0644
+  notify:
+    - reload systemctl
+    - restart_celery

@@ -1,0 +1,16 @@
+[Unit]
+Description=uWSGI {{ service_name }} web app
+After={{ service_unit_after}}
+
+[Service]
+Type={{ service_type }}
+Restart={{ service_restart }}
+RuntimeDirectory={{ service_name }}
+WorkingDirectory={{ codebase_path }}
+User={{ system_user }}
+Group={{ service_group }}
+ExecStart={{ venv_path }}/bin/uwsgi --ini {{ codebase_path }}/uwsgi.ini --env DJANGO_SETTINGS_MODULE={{ django_settings_module }}
+
+
+[Install]
+WantedBy={{ service_install_wantedby }}

@@ -1,0 +1,33 @@
+[uwsgi]
+{% if wsgi_http %}
+http={{wsgi_http}}
+{% endif %}
+socket={{ wsgi_socket }}
+chown-socket={{ wsgi_user }}:{{ wsgi_group }}
+chmod-socket={{ wsgi_chmod_socket }}
+uid={{ wsgi_user }}
+gid={{ wsgi_group }}
+chdir={{ codebase_path }}
+module={{ wsgi_module }}
+master={{ wsgi_master }}
+processes={{ wsgi_processes }}
+pidfile={{ pid_file }}
+vacuum={{ wsgi_vacuum }}                # clear environment on exit
+harakiri={{ wsgi_harakiri }}            # respawn processes taking more than 240 seconds
+max-requests={{ wsgi_max_requests }}    # respawn processes after serving 5000 requests
+logto={{ wsgi_logto }}
+virtualenv={{ wsgi_virtualenv }}
+{% if wsgi_static_map %}
+static-map={{ wsgi_static_map }}
+{% endif %}
+buffer-size={{ wsgi_buffer_size }}
+{% if wsgi_env %}
+env={{ wsgi_env }}
+{% endif %}
+stats={{ wsgi_stats }}
+{% if wsgi_enable_threads %}
+enable-threads
+{% endif %}
+{% if wsgi_memory_report %}
+memory-report
+{% endif %}

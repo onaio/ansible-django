@@ -1,0 +1,26 @@
+---
+- name: Install django
+  include_tasks: install.yml
+  tags:
+    - install
+
+- name: Configure django
+  include_tasks: configure.yml
+  tags:
+    - config
+
+- name: Setup services
+  include_tasks: service.yml
+  tags:
+    - setup
+
+- name: Install celery
+  include_tasks: celery.yml
+  when: enable_celery == True
+  tags:
+    - celery
+
+- name: Cleanup
+  include_tasks: cleanup.yml
+  tags:
+    - cleanup

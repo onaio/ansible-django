@@ -1,0 +1,11 @@
+---
+- name: Copy upstart scripts
+  template:
+    src: "etc/systemd/django.service.j2"
+    dest: /etc/systemd/system/{{ item }}
+    mode: 0644
+  notify:
+    - reload systemctl
+    - restart_service
+  with_items:
+    - "{{ service_name }}.service"

@@ -1,0 +1,5 @@
+import os
+
+{% for k,v in django_settings.items() %}
+{{k}} = {{v}}
+{% endfor %}

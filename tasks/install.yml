@@ -1,0 +1,90 @@
+- name: Add system user
+  user:
+    name: "{{ system_user }}"
+    shell: /bin/bash
+    group: "{{ system_group }}"
+    append: yes
+    createhome: yes
+
+- name: Add deadsnakes ppa
+  apt_repository:
+    repo: 'ppa:deadsnakes/ppa'
+    state: present
+
+- name: Update apt cache
+  apt:
+    update_cache: "yes"
+
+- name: Install system-wide dependencies
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 600
+  with_items: "{{ system_wide_dependencies }}"
+
+- name: Delete virtualenv
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - "{{ venv_path }}"
+  when: recreate_virtual_env
+
+- name: Ensure required directories are present
+  file:
+    state: directory
+    owner: "{{ system_user }}"
+    group: www-data
+    path: "{{ item }}"
+  when:
+    - item is defined
+    - item is not none
+  with_items:
+    - "{{ pid_socks_dir }}"
+    - "{{ versioned_path }}"
+    - "{{ checkout_path }}"
+    - "{{ venv_path }}"
+    - "{{ log_path }}"
+    - "{{ static_path }}"
+    - "{{ media_path }}"
+
+- name: Git clone
+  git:
+    accept_hostkey: "yes"
+    repo: "{{ git_url }}"
+    dest: "{{ checkout_path }}"
+    version: "{{ git_branch }}"
+    depth: 1
+  become_user: "{{ system_user }}"
+
+- name: Upgrade pip to latest version
+  pip:
+    name: pip
+    state: latest
+
+- name: Install pip requirements
+  pip:
+    state: present
+    requirements: "{{ item }}"
+    virtualenv: "{{ venv_path }}"
+    virtualenv_python: "{{ python_version }}"
+  become_user: "{{ system_user }}"
+  with_items: "{{ pip_paths }}"
+
+- name: Install other pip packages
+  pip:
+    name: "{{ item }}"
+    state: latest
+    virtualenv: "{{ venv_path }}"
+    virtualenv_python: "{{ python_version }}"
+  become_user: "{{ system_user }}"
+  with_items: "{{ pip_packages }}"
+
+- name: Copy local settings from template
+  template:
+    src: local_settings.py.j2
+    dest: "{{ local_settings_path }}"
+    owner: "{{ system_user }}"
+    group: "{{ system_group }}"
+    mode: 0644

@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Ona Engineering
+  company: Ona Systems Inc
+  description: Install and configure Django
+  min_ansible_version: 2.0
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies:
+ - role: ANXS.python
+   become: true
+   become_user: "root"
+   python_source_version: "{{ python_source_version }}"
+   tags:
+    - python
