@@ -11,12 +11,13 @@ script:
   # Check the role/playbook's syntax.
   - ansible-playbook -i "127.0.0.1,"  tests/test.yml --syntax-check
   # Run the role/playbook with ansible-playbook.
-  - ansible-playbook -i "127.0.0.1," tests/test.yml --connection=local --sudo
-  # Request a page via the web server, to make sure it is running and responds.
-  - curl "127.0.0.1:8080"
+  - ansible-playbook -i "127.0.0.1," tests/test.yml --connection=local --become
+  # Check if the service was started.
+  - sudo systemctl status django_example_app.service
+  - echo $?
   # Run the role/playbook again, checking to make sure it is idempotent.
   - >
-    ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+    ansible-playbook -i "127.0.0.1," tests/test.yml --connection=local --become
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
