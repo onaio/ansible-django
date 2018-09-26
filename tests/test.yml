@@ -1,6 +1,20 @@
 ---
 - name: test
   hosts: all
+  vars:
+    system_user: "django_example_app"
+    system_user_home: "/home/{{ system_user }}"
+    recreate_virtual_env: True
+    codebase_path: "{{ system_user_home }}/app"
+    versioned_path: "{{ codebase_path }}-versioned"
+    checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
+    git_url: "https://github.com/moshthepitt/django-template3.git"
+    python_source_version: "3.6"
+    python_version: "python3.6"
+    enable_celery: False
+    local_settings_path: "{{ checkout_path }}/template3/local_settings.py"
+    django_settings_module: "template3.settings"
+    wsgi_module: "template3.wsgi:application"
   gather_facts: true
   become: true
   roles:
