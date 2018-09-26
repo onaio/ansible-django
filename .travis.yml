@@ -5,8 +5,9 @@ before_install:
   - sudo apt-get install -qq python-apt python-pycurl
 install:
   - pip install ansible
-  # Add ansible.cfg to pick up roles path.
 script:
+  # Install dependecies
+  - ansible-galaxy install -r requirements.yml
   # Check the role/playbook's syntax.
   - ansible-playbook -i "127.0.0.1,"  tests/test.yml --syntax-check
   # Run the role/playbook with ansible-playbook.
