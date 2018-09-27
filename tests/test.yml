@@ -2,10 +2,17 @@
 - name: Pre-install stuff
   hosts: all
   tasks:
-    - name: Install python for ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - name: Install python 2 if not there
+      raw: |
+        test -e /usr/bin/python || \
+        (apt -y update && apt install -y  python-minimal)
       register: output
-      changed_when: False
+      changed_when: output.stdout|trim() != ""
+    - name: Install sudo if not there
+      raw: |
+        test -e /usr/bin/sudo || apt install -y sudo
+      register: output
+      changed_when: output.stdout|trim() != ""
   gather_facts: False
   become: True
 
