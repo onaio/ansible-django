@@ -2,7 +2,7 @@ pipeline:
   build:
     image: onaio/python:${PYTHON_VERSION}
     commands:
-      - apt-get install -qq python-apt python-pycurl
+      - apt install -qq python-pycurl
       - pip install --upgrade pip
       - pip install ansible
       - ansible-galaxy install -r requirements.yml
