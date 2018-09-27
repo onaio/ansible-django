@@ -1,5 +1,5 @@
 ---
-- name: test
+- name: Test django role
   hosts: all
   vars:
     system_user: "django_example_app"
