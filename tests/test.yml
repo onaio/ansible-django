@@ -1,5 +1,13 @@
 ---
-- name: Test django role
+- name: Install python for ansible
+  hosts: all
+  raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+  register: output
+  changed_when: False
+  gather_facts: True
+  become: True
+
+- name: Test Django role
   hosts: all
   vars:
     system_user: "django_example_app"
@@ -15,7 +23,7 @@
     local_settings_path: "{{ checkout_path }}/template3/local_settings.py"
     django_settings_module: "template3.settings"
     wsgi_module: "template3.wsgi:application"
-  gather_facts: true
-  become: true
+  gather_facts: True
+  become: True
   roles:
     - role: ../..
