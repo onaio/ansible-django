@@ -1,8 +1,9 @@
 pipeline:
   build:
-    image: onaio/python:${PYTHON_VERSION}
+    image: ubuntu:xenial
     commands:
-      - pip install --upgrade pip
+      - apt update
+      - apt install -y python-pip python-minimal
       - pip install ansible
       - ansible-galaxy install -r requirements.yml
       - ansible-playbook -i "127.0.0.1,"  tests/test.yml --syntax-check
@@ -20,6 +21,3 @@ pipeline:
     when:
       status: [success, failure]
       event: [push, tag]
-matrix:
-  PYTHON_VERSION:
-    - 3.6
