@@ -63,14 +63,6 @@
     name: pip
     state: latest
 
-- name: Install virtualenv via pip
-  pip:
-    state: present
-    name: virtualenv
-    executable: pip
-  become: yes
-  become_user: root
-
 - name: Install pip requirements
   pip:
     state: present
@@ -79,6 +71,8 @@
     virtualenv_python: "{{ python_version }}"
   become_user: "{{ system_user }}"
   with_items: "{{ pip_paths }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
 
 - name: Install other pip packages
   pip:
