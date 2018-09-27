@@ -63,13 +63,6 @@
     name: pip
     state: latest
 
-- name: Install virtualenv via pip
-  pip:
-    state: present
-    name: virtualenv
-  become: yes
-  become_user: root
-
 - name: Install pip requirements
   pip:
     state: present

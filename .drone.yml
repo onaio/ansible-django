@@ -18,8 +18,8 @@ pipeline:
     image: plugins/slack
     secrets: [ slack_webhook ]
     when:
-        status: [success, failure]
-        event: [push, tag]
+      status: [success, failure]
+      event: [push, tag]
 matrix:
   PYTHON_VERSION:
     - 3.6

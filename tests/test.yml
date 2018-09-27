@@ -21,7 +21,7 @@
   vars:
     system_user: "django_example_app"
     system_user_home: "/home/{{ system_user }}"
-    recreate_virtual_env: True
+    recreate_virtual_env: False
     codebase_path: "{{ system_user_home }}/app"
     versioned_path: "{{ codebase_path }}-versioned"
     checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
