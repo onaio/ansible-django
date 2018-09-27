@@ -1,11 +1,13 @@
 ---
-- name: Install python for ansible
+- name: Pre-install stuff
   hosts: all
-  raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
-  register: output
-  changed_when: False
-  gather_facts: True
-  become: True
+  tasks:
+    - name: Install python for ansible
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+      register: output
+      changed_when: False
+      gather_facts: True
+      become: True
 
 - name: Test Django role
   hosts: all
