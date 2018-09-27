@@ -6,8 +6,8 @@
       raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
       register: output
       changed_when: False
-      gather_facts: False
-      become: True
+  gather_facts: False
+  become: True
 
 - name: Test Django role
   hosts: all
