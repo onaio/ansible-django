@@ -2,7 +2,7 @@ pipeline:
   system:
     image: ubuntu:xenial
     labels:
-      com.amtrustna.it.infr.serv.system: "true"
+      - com.onaio.ansible-django.test
     privileged: true
     cap_add:
       - SYS_ADMIN
@@ -18,7 +18,7 @@ pipeline:
     environment:
       - TERM=xterm-256color
     commands:
-      - CONTAINER_ID="$(docker ps -qf "label=com.amtrustna.it.infr.serv.system")"
+      - CONTAINER_ID="$(docker ps -qf "label=com.onaio.ansible-django.test")"
       - test -n "$CONTAINER_ID" || { echo "Container Not Found"; exit 1 ;}
       - docker exec -t "$CONTAINER_ID" apt update
       - docker exec -t "$CONTAINER_ID" apt install -y git sudo python-pip python-minimal software-properties-common
