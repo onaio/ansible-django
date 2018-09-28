@@ -13,7 +13,7 @@ pipeline:
       - ansible-playbook -i "127.0.0.1," tests/test.yml --connection=local --become
       - >
         ansible-playbook -i "127.0.0.1," tests/test.yml --connection=local --become
-        | grep -q 'changed=0.*failed=0'
+        | grep -q 'changed=9.*failed=0'
         && (echo 'Idempotence test: pass' && exit 0)
         || (echo 'Idempotence test: fail' && exit 1)
       - systemctl status django_example_app.service
