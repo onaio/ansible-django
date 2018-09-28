@@ -24,6 +24,7 @@ service_group: "{{ system_group }}"
 service_unit_after: "network.target"
 service_install_wantedby: "multi-user.target"
 pid_socks_dir: "/var/run/{{ service_name }}"
+manage_services: False
 
 env_name: "prod"
 codebase_path: "{{ system_user_home }}/app"

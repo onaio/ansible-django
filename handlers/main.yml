@@ -1,11 +1,15 @@
 ---
 - name: reload systemctl
   command: systemctl daemon-reload
+  when:
+    - manage_services == True
 
 - name: restart_service
   service:
     name: "{{ service_name }}"
     state: restarted
+  when:
+    - manage_services == True
 
 - name: restart_celery
   service:
@@ -16,3 +20,4 @@
     - "{{ celerybeat_service_name }}"
   when:
     - enable_celery == True
+    - manage_services == True
