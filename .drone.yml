@@ -3,7 +3,6 @@ pipeline:
     image: ubuntu:xenial
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    init: /usr/lib/systemd/systemd
     commands:
       - apt update
       - apt install -y git sudo python-pip python-minimal software-properties-common
