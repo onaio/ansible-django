@@ -2,7 +2,7 @@ pipeline:
   system:
     image: ubuntu:xenial
     labels:
-      - com.onaio.ansible-django.test
+      com.onaio.ansible-django.test: "true"
     name: xxxxuyyuyy
     privileged: true
     cap_add:
