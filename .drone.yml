@@ -8,7 +8,8 @@ pipeline:
       - SYS_ADMIN
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    init: /usr/lib/systemd/systemd
+    commands:
+      - docker run --name xxyy -it /sbin/init
     detach: true
   exec:
     image: docker
@@ -18,7 +19,7 @@ pipeline:
     environment:
       - TERM=xterm-256color
     commands:
-      - sleep 60
+      - sleep 30
       - echo "$(docker ps)"
       - CONTAINER_ID="$(docker ps -qf "label=com.onaio.ansible-django.test")"
       - test -n "$CONTAINER_ID" || { echo "Container Not Found"; exit 1 ;}
