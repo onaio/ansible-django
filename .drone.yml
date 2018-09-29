@@ -3,8 +3,7 @@ pipeline:
     image: ubuntu:xenial
     labels:
       - com.onaio.ansible-django.test
-    metadata:
-      name: xkcd
+    name: xxxxuyyuyy
     privileged: true
     cap_add:
       - SYS_ADMIN
