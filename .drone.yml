@@ -1,16 +1,12 @@
 pipeline:
   system:
     image: ubuntu:xenial
-    labels:
-      com.onaio.ansible-django.test: "true"
     privileged: true
-    cap_add:
-      - SYS_ADMIN
+    detach: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    commands:
-      - docker run --name xxyy -it /sbin/init
-    detach: true
+    init: /sbin/init
+
   exec:
     image: docker
     volumes:
