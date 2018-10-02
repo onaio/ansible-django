@@ -48,15 +48,43 @@
     - "{{ log_path }}"
     - "{{ static_path }}"
     - "{{ media_path }}"
+    - "{{ system_user_home }}/.ssh"
 
-- name: Git clone
+- name: Copy git key
+  copy:
+    content: "{{ git_key }}"
+    dest: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
+    owner: "{{ system_user }}"
+    mode: 0600
+  no_log: False
+  when:
+    - git_key is defined
+    - git_key is not none
+
+- name: Git clone with key
   git:
     accept_hostkey: "yes"
     repo: "{{ git_url }}"
     dest: "{{ checkout_path }}"
-    version: "{{ git_branch }}"
+    version: "{{ git_version }}"
     depth: 1
+    key_file: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
+  become: True
   become_user: "{{ system_user }}"
+  when:
+    - git_key is defined
+    - git_key is not none
+
+- name: Remove Git Key
+  file:
+    state: absent
+    path: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
+  become: True
+  become_user: "{{ system_user }}"
+  when:
+    - git_key is defined
+    - git_key is not none
+    - remove_git_key == True
 
 - name: Upgrade pip to latest version
   pip:
