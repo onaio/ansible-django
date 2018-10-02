@@ -86,6 +86,18 @@
     - git_key is not none
     - remove_git_key == True
 
+- name: Git clone without key
+  git:
+    accept_hostkey: "yes"
+    repo: "{{ git_url }}"
+    dest: "{{ checkout_path }}"
+    version: "{{ git_version }}"
+    depth: 1
+  become: True
+  become_user: "{{ system_user }}"
+  when:
+    - git_key is not defined or git_key is none
+
 - name: Upgrade pip to latest version
   pip:
     name: pip

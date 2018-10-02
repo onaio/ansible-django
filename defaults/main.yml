@@ -5,7 +5,7 @@ system_user_home: "/home/{{ system_user }}"
 
 # git
 git_url:
-git_branch: "master"
+git_version: "master"
 git_key:
 remove_git_key: True
 
