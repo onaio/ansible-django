@@ -26,6 +26,7 @@
     versioned_path: "{{ codebase_path }}-versioned"
     checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
     git_url: "https://github.com/moshthepitt/picha"
+    git_version: "master"
     celery_app: "picha"
     python_source_version: "2.7"
     python_version: "python2.7"
