@@ -44,6 +44,7 @@ recreate_virtual_env: False
 use_pipenv: False
 
 ## pip
+use_regular_old_pip: True
 pip_paths:
   - "{{ checkout_path }}/requirements.txt"
 
