@@ -7,6 +7,7 @@ system_user_home: "/home/{{ system_user }}"
 git_url:
 git_version: "master"
 git_key:
+git_key_filename: "id_ed25519"
 remove_git_key: True
 
 # system-wide dependencies
@@ -36,10 +37,16 @@ log_path: "/var/log/{{ service_name }}"
 pid_file: "{{ pid_socks_dir }}/{{ service_name }}.pid"
 proxy_read_timeout: "300s"
 
-# pip
+# Python packages
 recreate_virtual_env: False
+
+## pipenv
+use_pipenv: False
+
+## pip
 pip_paths:
   - "{{ checkout_path }}/requirements.txt"
+
 ## other pip packages not in requirements files
 pip_packages:
   - celery

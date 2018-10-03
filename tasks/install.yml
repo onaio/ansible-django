@@ -103,7 +103,7 @@
     name: pip
     state: latest
 
-- name: Install pip requirements
+- name: Install Python packages using pip
   pip:
     state: present
     requirements: "{{ item }}"
@@ -113,8 +113,31 @@
   with_items: "{{ pip_paths }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
+  when:
+    - use_regular_old_pip == True
 
-- name: Install other pip packages
+- name: Install pipenv
+  pip:
+    name: pipenv
+    state: latest
+    virtualenv: "{{ venv_path }}"
+    virtualenv_python: "{{ python_version }}"
+  become_user: "{{ system_user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
+  when:
+    - use_pipenv == True
+
+- name: Install Python packages using pipenv
+  shell: source {{ venv_path }}/bin/activate && pipenv sync --python {{ python_source_version }}
+  become_user: "{{ system_user }}"
+  args:
+    chdir: "{{ checkout_path }}"
+    executable: /bin/bash
+  when:
+    - use_pipenv == True
+
+- name: Install other python packages using pip
   pip:
     name: "{{ item }}"
     state: latest
