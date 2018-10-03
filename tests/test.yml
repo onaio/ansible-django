@@ -1,7 +1,46 @@
 ---
-- name: test
+- name: Pre-install stuff
   hosts: all
-  gather_facts: true
-  become: true
+  tasks:
+    - name: Install python 2 if not there
+      raw: |
+        test -e /usr/bin/python || \
+        (apt -y update && apt install -y  python-minimal)
+      register: output
+      changed_when: output.stdout|trim() != ""
+    - name: Install sudo if not there
+      raw: |
+        test -e /usr/bin/sudo || apt install -y sudo
+      register: output
+      changed_when: output.stdout|trim() != ""
+  gather_facts: False
+  become: True
+
+- name: Test Django role
+  hosts: all
+  vars:
+    system_user: "django_example_app"
+    system_user_home: "/home/{{ system_user }}"
+    recreate_virtual_env: False
+    codebase_path: "{{ system_user_home }}/app"
+    versioned_path: "{{ codebase_path }}-versioned"
+    checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
+    git_url: "https://github.com/moshthepitt/picha"
+    git_version: "master"
+    celery_app: "picha"
+    python_source_version: "2.7"
+    python_version: "python2.7"
+    enable_celery: True
+    local_settings_path: "{{ checkout_path }}/picha/local_settings.py"
+    django_settings_module: "picha.settings"
+    wsgi_module: "picha.wsgi:application"
+    django_init_commands:
+      - migrate --noinput
+    pip_packages:
+      - celery
+      - uwsgi
+      - 'redis==2.10.6'
+  gather_facts: True
+  become: True
   roles:
     - role: ../..

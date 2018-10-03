@@ -9,7 +9,7 @@ This is a very simple and purist role for django installation.  We only install 
 
 We intentionally consider the installation and configuration of databases, web servers, and other things as out of scope for this role.  Therefore, naturally this role is to be used in a playbook that installs and configures those other things.
 
-Both `Django` and `celery`, are installed and set up as `systemd` services.
+Both `Django` and `celery` are installed and set up as `systemd` services.
 
 ## Role Variables ##
 
