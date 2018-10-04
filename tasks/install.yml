@@ -17,11 +17,10 @@
 
 - name: Install system-wide dependencies
   apt:
-    pkg: "{{ item }}"
+    name: "{{ system_wide_dependencies }}"
     state: latest
     update_cache: yes
     cache_valid_time: 600
-  with_items: "{{ system_wide_dependencies }}"
 
 - name: Delete virtualenv
   file:
@@ -139,12 +138,11 @@
 
 - name: Install other python packages using pip
   pip:
-    name: "{{ item }}"
+    name: "{{ pip_packages }}"
     state: latest
     virtualenv: "{{ venv_path }}"
     virtualenv_python: "{{ python_version }}"
   become_user: "{{ system_user }}"
-  with_items: "{{ pip_packages }}"
 
 - name: Copy local settings from template
   template:
