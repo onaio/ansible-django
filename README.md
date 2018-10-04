@@ -1,5 +1,7 @@
 # ansible-django #
 
+[![Build Status](http://cicd.onalabs.org/api/badges/onaio/ansible-django/status.svg)](http://cicd.onalabs.org/onaio/ansible-django)
+
 Use this role to install, configure, and manage [Django](https://www.djangoproject.com/).
 
 This is a very simple and purist role for django installation.  We only install and configure:
