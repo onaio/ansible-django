@@ -40,6 +40,11 @@
       - celery
       - uwsgi
       - 'redis==2.10.6'
+    top_python_statements:
+      - import os
+      - from decimal import Decimal
+    bottom_python_statements:
+      - test_var = Decimal(16)
   gather_facts: True
   become: True
   roles:

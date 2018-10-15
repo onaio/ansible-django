@@ -93,6 +93,11 @@ django_settings:
   DEFAULT_FROM_EMAIL: "'Hello World <hello@example.com>'"
   ALLOWED_HOSTS: "[]"
   DEBUG: True
+## python statements included at the top of settings file
+top_python_statements:
+  - import os
+## python statements included at the bottom of settings file
+bottom_python_statements:
 
 # wsgi
 wsgi_module:

@@ -1,5 +1,15 @@
-import os
+{% if top_python_statements %}
+{% for stmt in top_python_statements %}
+{{ stmt }}
+{% endfor %}
+{% endif %}
 
 {% for k,v in django_settings.items() %}
 {{k}} = {{v}}
 {% endfor %}
+
+{% if bottom_python_statements %}
+{% for stmt in bottom_python_statements %}
+{{ stmt }}
+{% endfor %}
+{% endif %}
