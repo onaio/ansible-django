@@ -8,7 +8,10 @@
     createhome: yes
 
 - name: Add deadsnakes ppa
-  shell: "add-apt-repository ppa:deadsnakes/ppa -y"
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+    state: present
+    update_cache: yes
   become: true
   become_user: root
 
