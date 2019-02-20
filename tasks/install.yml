@@ -15,10 +15,6 @@
   become: true
   become_user: root
 
-- name: Update apt cache
-  apt:
-    update_cache: "yes"
-
 - name: Install system-wide dependencies
   apt:
     name: "{{ system_wide_dependencies }}"
