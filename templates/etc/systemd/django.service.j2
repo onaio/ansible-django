@@ -1,16 +1,16 @@
 [Unit]
-Description=uWSGI {{ service_name }} web app
-After={{ service_unit_after}}
+Description=uWSGI {{ django_service_name }} web app
+After={{ django_service_unit_after}}
 
 [Service]
-Type={{ service_type }}
-Restart={{ service_restart }}
-RuntimeDirectory={{ service_name }}
-WorkingDirectory={{ codebase_path }}
-User={{ system_user }}
-Group={{ service_group }}
-ExecStart={{ venv_path }}/bin/uwsgi --ini {{ codebase_path }}/uwsgi.ini --env DJANGO_SETTINGS_MODULE={{ django_settings_module }}
+Type={{ django_service_type }}
+Restart={{ django_service_restart }}
+RuntimeDirectory={{ django_service_name }}
+WorkingDirectory={{ django_codebase_path }}
+User={{ django_system_user }}
+Group={{ django_service_group }}
+ExecStart={{ django_venv_path }}/bin/uwsgi --ini {{ django_codebase_path }}/uwsgi.ini --env DJANGO_SETTINGS_MODULE={{ django_settings_module }}
 
 
 [Install]
-WantedBy={{ service_install_wantedby }}
+WantedBy={{ django_service_install_wantedby }}

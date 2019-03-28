@@ -18,16 +18,16 @@ Both `Django` and `celery` are installed and set up as `systemd` services.
 Some of the more important variables are briefly described below.  You can see all variables by looking at the `defaults/main.yml` file.
 
 ```yml
-system_user: "django_app"  # name of the user that will own the django installation
+django_system_user: "django_app"  # name of the user that will own the django installation
 
-python_source_version: "3.6"  # the python verion to user
-python_version: "python3.6"  # the python version to use with pip commands
+django_python_source_version: "3.6"  # the python verion to user
+django_python_version: "python3.6"  # the python version to use with pip commands
 
-git_url: "https://github.com/moshthepitt/django-template3.git"  # the git repo of your django app which we are installing
+django_git_url: "https://github.com/moshthepitt/django-template3.git"  # the git repo of your django app which we are installing
 
-local_settings_path: "path to /local_settings.py"  # Path to the Django settings file
+django_local_settings_path: "path to /local_settings.py"  # Path to the Django settings file
 django_settings_module: "template3.settings"  # Django settings module
-wsgi_module: "template3.wsgi:application"  # Django wsgi module
+django_wsgi_module: "template3.wsgi:application"  # Django wsgi module
 ```
 
 You can look at `tests/test.yml` for examples of how to use these variables.

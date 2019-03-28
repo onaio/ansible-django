@@ -8,4 +8,4 @@
     - reload systemctl
     - restart_service
   with_items:
-    - "{{ service_name }}.service"
+    - "{{ django_service_name }}.service"

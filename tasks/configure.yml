@@ -2,39 +2,39 @@
 - name: Run Django init commands
   django_manage:
     command: "{{ item }}"
-    app_path: "{{ checkout_path }}"
-    virtualenv: "{{ venv_path }}"
+    app_path: "{{ django_checkout_path }}"
+    virtualenv: "{{ django_venv_path }}"
   with_items: "{{ django_init_commands }}"
-  become_user: "{{ system_user }}"
+  become_user: "{{ django_system_user }}"
 
 - name: Changing static folder permission
   file:
-    path: "{{ static_path }}"
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    path: "{{ django_static_path }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
     mode: 0755
   when:
-    - static_path is defined
-    - static_path is not none
+    - django_static_path is defined
+    - django_static_path is not none
 
 - name: Changing mediafolder permission
   file:
-    path: "{{ media_path }}"
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    path: "{{ django_media_path }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
     mode: 0755
   when:
-    - media_path is defined
-    - media_path is not none
+    - django_media_path is defined
+    - django_media_path is not none
 
 - name: Make the new codebase current
   file:
-    src: "{{ checkout_path }}"
-    dest: "{{ codebase_path }}"
+    src: "{{ django_checkout_path }}"
+    dest: "{{ django_codebase_path }}"
     state: link
     force: yes
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
   notify:
     - restart_service
     - restart_celery
@@ -42,9 +42,9 @@
 - name: Copy uwsgi.ini
   template:
     src: uwsgi.ini.j2
-    dest: "{{ checkout_path }}/uwsgi.ini"
+    dest: "{{ django_checkout_path }}/uwsgi.ini"
     mode: 0644
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
   notify:
     - restart_service

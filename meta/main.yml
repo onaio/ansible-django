@@ -12,6 +12,6 @@ dependencies:
  - role: ANXS.python
    become: true
    become_user: "root"
-   python_source_version: "{{ python_source_version }}"
+   python_source_version: "{{ django_python_source_version }}"
    tags:
     - python

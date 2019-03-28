@@ -16,7 +16,7 @@
 
 - name: Install celery
   include_tasks: celery.yml
-  when: enable_celery == True
+  when: django_enable_celery == True
   tags:
     - celery
 

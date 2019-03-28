@@ -1,5 +1,5 @@
-{% if top_python_statements %}
-{% for stmt in top_python_statements %}
+{% if django_top_python_statements %}
+{% for stmt in django_top_python_statements %}
 {{ stmt }}
 {% endfor %}
 {% endif %}
@@ -8,8 +8,8 @@
 {{k}} = {{v}}
 {% endfor %}
 
-{% if bottom_python_statements %}
-{% for stmt in bottom_python_statements %}
+{% if django_bottom_python_statements %}
+{% for stmt in django_bottom_python_statements %}
 {{ stmt }}
 {% endfor %}
 {% endif %}
