@@ -1,65 +1,65 @@
 # user
-system_user: "django"
-system_group: "www-data"
-system_user_home: "/home/{{ system_user }}"
+django_system_user: "django"
+django_system_group: "www-data"
+django_system_user_home: "/home/{{ django_system_user }}"
 
 # git
-git_url:
-git_version: "master"
-git_key:
-git_key_filename: "id_ed25519"
-remove_git_key: True
+django_git_url:
+django_git_version: "master"
+django_git_key:
+django_git_key_filename: "id_ed25519"
+django_remove_git_key: True
 
 # system-wide dependencies
-python_source_version: "3.6"
-python_version: "python3.6"  # or python3.x
-system_wide_dependencies:
+django_python_source_version: "3.6"
+django_python_version: "python3.6"  # or python3.x
+django_system_wide_dependencies:
   - build-essential
   - git
   - python3.6-dev
 
 # service
-service_name: "{{ system_user }}"
-service_type: "notify"
-service_restart: "on-failure"
-service_group: "{{ system_group }}"
-service_unit_after: "network.target"
-service_install_wantedby: "multi-user.target"
-pid_socks_dir: "/var/run/{{ service_name }}"
-manage_services: False
+django_service_name: "{{ django_system_user }}"
+django_service_type: "notify"
+django_service_restart: "on-failure"
+django_service_group: "{{ django_system_group }}"
+django_service_unit_after: "network.target"
+django_service_install_wantedby: "multi-user.target"
+django_pid_socks_dir: "/var/run/{{ django_service_name }}"
+django_manage_services: False
 
-env_name: "prod"
-codebase_path: "{{ system_user_home }}/app"
-versioned_path: "{{ codebase_path }}-versioned"
-checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
-venv_path: "{{ system_user_home }}/.virtualenvs/{{ system_user }}"
-log_path: "/var/log/{{ service_name }}"
-pid_file: "{{ pid_socks_dir }}/{{ service_name }}.pid"
-proxy_read_timeout: "300s"
+django_env_name: "prod"
+django_codebase_path: "{{ django_system_user_home }}/app"
+django_versioned_path: "{{ django_codebase_path }}-versioned"
+django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
+django_venv_path: "{{ django_system_user_home }}/.virtualenvs/{{ django_system_user }}"
+django_log_path: "/var/log/{{ django_service_name }}"
+django_pid_file: "{{ django_pid_socks_dir }}/{{ django_service_name }}.pid"
+django_proxy_read_timeout: "300s"
 
 # Python packages
-recreate_virtual_env: False
+django_recreate_virtual_env: False
 
 ## pipenv
-use_pipenv: False
+django_use_pipenv: False
 
 ## pip
-use_regular_old_pip: True
-pip_paths:
-  - "{{ checkout_path }}/requirements.txt"
+django_use_regular_old_pip: True
+django_pip_paths:
+  - "{{ django_checkout_path }}/requirements.txt"
 
 ## other pip packages not in requirements files
-pip_packages:
+django_pip_packages:
   - celery
   - uwsgi
 
 # Django
-local_settings_path:
+django_local_settings_path:
 django_init_commands:
   - migrate --noinput
   - collectstatic --noinput
-static_path: "/var/www/static/"
-media_path: "/var/www/media/"
+django_static_path: "/var/www/static/"
+django_media_path: "/var/www/media/"
 django_settings_module:
 
 ## Django settings
@@ -83,9 +83,9 @@ django_settings:
           'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
       }
     }
-  STATIC_ROOT: "'{{ static_path }}'"
+  STATIC_ROOT: "'{{ django_static_path }}'"
   STATIC_URL: "'/static/'"
-  MEDIA_ROOT: "'{{ media_path }}'"
+  MEDIA_ROOT: "'{{ django_media_path }}'"
   MEDIA_URL: "'/media/'"
   EMAIL_BACKEND: "'django.core.mail.backends.console.EmailBackend'"
   EMAIL_HOST: "'localhost'"
@@ -94,40 +94,40 @@ django_settings:
   ALLOWED_HOSTS: "[]"
   DEBUG: True
 ## python statements included at the top of settings file
-top_python_statements:
+django_top_python_statements:
   - import os
 ## python statements included at the bottom of settings file
-bottom_python_statements:
+django_bottom_python_statements:
 
 # wsgi
-wsgi_module:
-wsgi_processes: 3
-wsgi_harakiri: 240
-wsgi_max_requests: 5000
-wsgi_http:
-wsgi_socket: "{{ pid_socks_dir }}/{{ service_name }}.sock"
-wsgi_chmod_socket: 777
-wsgi_user: "{{ system_user }}"
-wsgi_group: "www-data"
-wsgi_vacuum: True
-wsgi_master: True
-wsgi_logto: "{{ log_path }}/uwsgi_{{ service_name }}.log"
-wsgi_virtualenv: "{{ venv_path }}"
-wsgi_static_map: "/static={{ static_path }}"
-wsgi_buffer_size: 8192
-wsgi_env: "HTTPS=on"
-wsgi_stats: "{{ pid_socks_dir }}/{{ service_name }}_stats.sock"
-wsgi_enable_threads: False
-wsgi_memory_report: False
+django_wsgi_module:
+django_wsgi_processes: 3
+django_wsgi_harakiri: 240
+django_wsgi_max_requests: 5000
+django_wsgi_http:
+django_wsgi_socket: "{{ django_pid_socks_dir }}/{{ django_service_name }}.sock"
+django_wsgi_chmod_socket: 777
+django_wsgi_user: "{{ django_system_user }}"
+django_wsgi_group: "www-data"
+django_wsgi_vacuum: True
+django_wsgi_master: True
+django_wsgi_logto: "{{ django_log_path }}/uwsgi_{{ django_service_name }}.log"
+django_wsgi_virtualenv: "{{ django_venv_path }}"
+django_wsgi_static_map: "/static={{ django_static_path }}"
+django_wsgi_buffer_size: 8192
+django_wsgi_env: "HTTPS=on"
+django_wsgi_stats: "{{ django_pid_socks_dir }}/{{ django_service_name }}_stats.sock"
+django_wsgi_enable_threads: False
+django_wsgi_memory_report: False
 
 # celery
-enable_celery: True
-celery_app:
-celeryd_nodes: "{{ service_name }}"
-celeryd_service_name: "celeryd-{{ service_name }}"
-celerybeat_service_name: "celerybeat-{{ service_name }}"
-celeryd_opts: "--time-limit=300 --concurrency=8"
-celeryd_log_level: "INFO"
-celerybeat_log_level: "INFO"
-celeryd_pid_file:
-celery_beat_pid_file:
+django_enable_celery: True
+django_celery_app:
+django_celeryd_nodes: "{{ django_service_name }}"
+django_celeryd_service_name: "celeryd-{{ django_service_name }}"
+django_celerybeat_service_name: "celerybeat-{{ django_service_name }}"
+django_celeryd_opts: "--time-limit=300 --concurrency=8"
+django_celeryd_log_level: "INFO"
+django_celerybeat_log_level: "INFO"
+django_celeryd_pid_file:
+django_celery_beat_pid_file:

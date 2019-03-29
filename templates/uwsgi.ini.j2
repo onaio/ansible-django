@@ -1,33 +1,33 @@
 [uwsgi]
-{% if wsgi_http %}
-http={{wsgi_http}}
+{% if django_wsgi_http %}
+http={{django_wsgi_http}}
 {% endif %}
-socket={{ wsgi_socket }}
-chown-socket={{ wsgi_user }}:{{ wsgi_group }}
-chmod-socket={{ wsgi_chmod_socket }}
-uid={{ wsgi_user }}
-gid={{ wsgi_group }}
-chdir={{ codebase_path }}
-module={{ wsgi_module }}
-master={{ wsgi_master }}
-processes={{ wsgi_processes }}
-pidfile={{ pid_file }}
-vacuum={{ wsgi_vacuum }}                # clear environment on exit
-harakiri={{ wsgi_harakiri }}            # respawn processes taking more than 240 seconds
-max-requests={{ wsgi_max_requests }}    # respawn processes after serving 5000 requests
-logto={{ wsgi_logto }}
-virtualenv={{ wsgi_virtualenv }}
-{% if wsgi_static_map %}
-static-map={{ wsgi_static_map }}
+socket={{ django_wsgi_socket }}
+chown-socket={{ django_wsgi_user }}:{{ django_wsgi_group }}
+chmod-socket={{ django_wsgi_chmod_socket }}
+uid={{ django_wsgi_user }}
+gid={{ django_wsgi_group }}
+chdir={{ django_codebase_path }}
+module={{ django_wsgi_module }}
+master={{ django_wsgi_master }}
+processes={{ django_wsgi_processes }}
+pidfile={{ django_pid_file }}
+vacuum={{ django_wsgi_vacuum }}                # clear environment on exit
+harakiri={{ django_wsgi_harakiri }}            # respawn processes taking more than 240 seconds
+max-requests={{ django_wsgi_max_requests }}    # respawn processes after serving 5000 requests
+logto={{ django_wsgi_logto }}
+virtualenv={{ django_wsgi_virtualenv }}
+{% if django_wsgi_static_map %}
+static-map={{ django_wsgi_static_map }}
 {% endif %}
-buffer-size={{ wsgi_buffer_size }}
-{% if wsgi_env %}
-env={{ wsgi_env }}
+buffer-size={{ django_wsgi_buffer_size }}
+{% if django_wsgi_env %}
+env={{ django_wsgi_env }}
 {% endif %}
-stats={{ wsgi_stats }}
-{% if wsgi_enable_threads %}
+stats={{ django_wsgi_stats }}
+{% if django_wsgi_enable_threads %}
 enable-threads
 {% endif %}
-{% if wsgi_memory_report %}
+{% if django_wsgi_memory_report %}
 memory-report
 {% endif %}

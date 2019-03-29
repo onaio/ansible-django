@@ -19,31 +19,31 @@
 - name: Test Django role
   hosts: all
   vars:
-    system_user: "django_example_app"
-    system_user_home: "/home/{{ system_user }}"
-    recreate_virtual_env: False
-    codebase_path: "{{ system_user_home }}/app"
-    versioned_path: "{{ codebase_path }}-versioned"
-    checkout_path: "{{ versioned_path }}/{{ ansible_date_time['epoch'] }}"
-    git_url: "https://github.com/moshthepitt/picha"
-    git_version: "master"
-    celery_app: "picha"
-    python_source_version: "2.7"
-    python_version: "python2.7"
-    enable_celery: True
-    local_settings_path: "{{ checkout_path }}/picha/local_settings.py"
+    django_system_user: "django_example_app"
+    django_system_user_home: "/home/{{ django_system_user }}"
+    django_recreate_virtual_env: False
+    django_codebase_path: "{{ django_system_user_home }}/app"
+    django_versioned_path: "{{ django_codebase_path }}-versioned"
+    django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
+    django_git_url: "https://github.com/moshthepitt/picha"
+    django_git_version: "master"
+    django_celery_app: "picha"
+    django_python_source_version: "2.7"
+    django_python_version: "python2.7"
+    django_enable_celery: True
+    django_local_settings_path: "{{ django_checkout_path }}/picha/local_settings.py"
     django_settings_module: "picha.settings"
-    wsgi_module: "picha.wsgi:application"
+    django_wsgi_module: "picha.wsgi:application"
     django_init_commands:
       - migrate --noinput
-    pip_packages:
+    django_pip_packages:
       - celery
       - uwsgi
       - 'redis==2.10.6'
-    top_python_statements:
+    django_top_python_statements:
       - import os
       - from decimal import Decimal
-    bottom_python_statements:
+    django_bottom_python_statements:
       - test_var = Decimal(16)
   gather_facts: True
   become: True

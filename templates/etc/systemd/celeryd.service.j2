@@ -1,14 +1,14 @@
 [Unit]
-Description=Celery {{ system_user }} Service
+Description=Celery {{ django_system_user }} Service
 After=network.target
 
 [Service]
 Type=forking
-User={{ system_user }}
-Group={{ system_group }}
-EnvironmentFile=-/etc/default/celeryd-{{ system_user }}
-WorkingDirectory={{ codebase_path }}
-RuntimeDirectory=celery-{{ system_user }}
+User={{ django_system_user }}
+Group={{ django_system_group }}
+EnvironmentFile=-/etc/default/celeryd-{{ django_system_user }}
+WorkingDirectory={{ django_codebase_path }}
+RuntimeDirectory=celery-{{ django_system_user }}
 ExecStart=/bin/sh -c '${CELERY_BIN} multi start $CELERYD_NODES \
     -A $CELERY_APP --logfile=${CELERYD_LOG_FILE} \
     --loglevel="${CELERYD_LOG_LEVEL}" \

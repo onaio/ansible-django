@@ -1,31 +1,31 @@
 # Where to chdir at start.
-CELERYBEAT_CHDIR="{{ codebase_path }}"
+CELERYBEAT_CHDIR="{{ django_codebase_path }}"
 
 # Python interpreter from environment, if using virtualenv
-ENV_PYTHON="{{ venv_path }}/bin/python"
-CELERY_BIN="{{ venv_path }}/bin/celery"
+ENV_PYTHON="{{ django_venv_path }}/bin/python"
+CELERY_BIN="{{ django_venv_path }}/bin/celery"
 
 # Name of the celery config module, don't change this.
-CELERY_APP="{{ celery_app }}"
+CELERY_APP="{{ django_celery_app }}"
 
 # %n will be replaced with the nodename.
 
 # Workers should run as an unprivileged user.
-CELERYBEAT_USER="{{ system_user }}"
-CELERYBEAT_GROUP="{{ system_group }}"
+CELERYBEAT_USER="{{ django_system_user }}"
+CELERYBEAT_GROUP="{{ django_system_group }}"
 
 # Set any other env vars here too!
-PROJET_ENV="{{ env_name }}"
+PROJET_ENV="{{ django_env_name }}"
 C_FORCE_ROOT=1
-CELERYBEAT_LOG_LEVEL="{{ celerybeat_log_level }}"
-CELERYBEAT_LOG_FILE="/var/log/{{ system_user }}/celerybeat.log"
+CELERYBEAT_LOG_LEVEL="{{ django_celerybeat_log_level }}"
+CELERYBEAT_LOG_FILE="/var/log/{{ django_system_user }}/celerybeat.log"
 CELERY_CREATE_DIRS=1
-CELERYBEAT_SCHEDULE="/var/run/{{ system_user }}/celerybeat-schedule"
-CELERYBEAT_STATE_DIR="/var/run/{{ system_user }}/celerybeat"
-{% if celery_beat_pid_file %}
-CELERYBEAT_PID_FILE="{{ celery_beat_pid_file }}"
+CELERYBEAT_SCHEDULE="/var/run/{{ django_system_user }}/celerybeat-schedule"
+CELERYBEAT_STATE_DIR="/var/run/{{ django_system_user }}/celerybeat"
+{% if django_celery_beat_pid_file %}
+CELERYBEAT_PID_FILE="{{ django_celery_beat_pid_file }}"
 {% else %}
-CELERYBEAT_PID_FILE="/var/run/{{ system_user }}/celerybeat.pid"
+CELERYBEAT_PID_FILE="/var/run/{{ django_system_user }}/celerybeat.pid"
 {% endif %}
 # Name of the projects settings module.
 # in this case is just settings and not the full path because it will change the dir to

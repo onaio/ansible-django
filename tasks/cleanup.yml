@@ -1,11 +1,11 @@
 ---
 - name: Get previous app deploy listing
-  shell: ls -tr1 chdir={{ versioned_path }}
+  shell: ls -tr1 chdir={{ django_versioned_path }}
   register: versioned_list
 
 - name: Remove extra files from app directroy
   file:
-    path: "{{ versioned_path }}/{{ versioned_list.stdout_lines[item|int] }}"
+    path: "{{ django_versioned_path }}/{{ versioned_list.stdout_lines[item|int] }}"
     state: absent
   with_sequence: start=0 end={{ versioned_list.stdout_lines|length - 10 }}
   ignore_errors: yes

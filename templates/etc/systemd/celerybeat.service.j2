@@ -1,22 +1,22 @@
 [Unit]
-Description=Celery Beat Schedular {{ system_user }} Service
+Description=Celery Beat Schedular {{ django_system_user }} Service
 After=network.target
 
 [Service]
 Type=simple
-User={{ system_user }}
-Group={{ system_group }}
-EnvironmentFile=-/etc/default/celerybeat-{{ system_user }}
-WorkingDirectory={{ codebase_path }}
-RuntimeDirectory=celery-{{ system_user }}
+User={{ django_system_user }}
+Group={{ django_system_group }}
+EnvironmentFile=-/etc/default/celerybeat-{{ django_system_user }}
+WorkingDirectory={{ django_codebase_path }}
+RuntimeDirectory=celery-{{ django_system_user }}
 ExecStart=/bin/sh -c '${CELERY_BIN} beat \
     -A $CELERY_APP \
-    --workdir={{ codebase_path }} \
+    --workdir={{ django_codebase_path }} \
     --pidfile=${CELERYBEAT_PID_FILE} \
     --logfile=${CELERYBEAT_LOG_FILE} \
     --loglevel=${CELERYBEAT_LOG_LEVEL} \
     --schedule=${CELERYBEAT_SCHEDULE}'
-ExecStop=/bin/systemctl kill celerybeat-{{ system_user }}.service
+ExecStop=/bin/systemctl kill celerybeat-{{ django_system_user }}.service
 
 [Install]
 WantedBy=multi-user.target

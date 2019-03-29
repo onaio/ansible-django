@@ -1,8 +1,8 @@
 - name: Add system user
   user:
-    name: "{{ system_user }}"
+    name: "{{ django_system_user }}"
     shell: /bin/bash
-    group: "{{ system_group }}"
+    group: "{{ django_system_group }}"
     append: yes
     createhome: yes
 
@@ -17,7 +17,7 @@
 
 - name: Install system-wide dependencies
   apt:
-    name: "{{ system_wide_dependencies }}"
+    name: "{{ django_system_wide_dependencies }}"
     state: latest
     update_cache: yes
     cache_valid_time: 600
@@ -27,75 +27,75 @@
     state: absent
     path: "{{ item }}"
   with_items:
-    - "{{ venv_path }}"
-  when: recreate_virtual_env
+    - "{{ django_venv_path }}"
+  when: django_recreate_virtual_env
 
 - name: Ensure required directories are present
   file:
     state: directory
-    owner: "{{ system_user }}"
+    owner: "{{ django_system_user }}"
     group: www-data
     path: "{{ item }}"
   when:
     - item is defined
     - item is not none
   with_items:
-    - "{{ pid_socks_dir }}"
-    - "{{ versioned_path }}"
-    - "{{ checkout_path }}"
-    - "{{ venv_path }}"
-    - "{{ log_path }}"
-    - "{{ static_path }}"
-    - "{{ media_path }}"
-    - "{{ system_user_home }}/.ssh"
+    - "{{ django_pid_socks_dir }}"
+    - "{{ django_versioned_path }}"
+    - "{{ django_checkout_path }}"
+    - "{{ django_venv_path }}"
+    - "{{ django_log_path }}"
+    - "{{ django_static_path }}"
+    - "{{ django_media_path }}"
+    - "{{ django_system_user_home }}/.ssh"
 
 - name: Copy git key
   copy:
-    content: "{{ git_key }}"
-    dest: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
-    owner: "{{ system_user }}"
+    content: "{{ django_git_key }}"
+    dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
+    owner: "{{ django_system_user }}"
     mode: 0600
   no_log: False
   when:
-    - git_key is defined
-    - git_key is not none
+    - django_git_key is defined
+    - django_git_key is not none
 
 - name: Git clone with key
   git:
     accept_hostkey: "yes"
-    repo: "{{ git_url }}"
-    dest: "{{ checkout_path }}"
-    version: "{{ git_version }}"
+    repo: "{{ django_git_url }}"
+    dest: "{{ django_checkout_path }}"
+    version: "{{ django_git_version }}"
     depth: 1
-    key_file: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
+    key_file: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
   become: True
-  become_user: "{{ system_user }}"
+  become_user: "{{ django_system_user }}"
   when:
-    - git_key is defined
-    - git_key is not none
+    - django_git_key is defined
+    - django_git_key is not none
 
 - name: Remove Git Key
   file:
     state: absent
-    path: "{{ system_user_home }}/.ssh/{{ git_key_filename }}"
+    path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
   become: True
-  become_user: "{{ system_user }}"
+  become_user: "{{ django_system_user }}"
   when:
-    - git_key is defined
-    - git_key is not none
-    - remove_git_key == True
+    - django_git_key is defined
+    - django_git_key is not none
+    - django_remove_git_key == True
 
 - name: Git clone without key
   git:
     accept_hostkey: "yes"
-    repo: "{{ git_url }}"
-    dest: "{{ checkout_path }}"
-    version: "{{ git_version }}"
+    repo: "{{ django_git_url }}"
+    dest: "{{ django_checkout_path }}"
+    version: "{{ django_git_version }}"
     depth: 1
   become: True
-  become_user: "{{ system_user }}"
+  become_user: "{{ django_system_user }}"
   when:
-    - git_key is not defined or git_key is none
+    - django_git_key is not defined or django_git_key is none
 
 - name: Upgrade pip to latest version
   pip:
@@ -106,48 +106,48 @@
   pip:
     state: present
     requirements: "{{ item }}"
-    virtualenv: "{{ venv_path }}"
-    virtualenv_python: "{{ python_version }}"
-  become_user: "{{ system_user }}"
-  with_items: "{{ pip_paths }}"
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+  become_user: "{{ django_system_user }}"
+  with_items: "{{ django_pip_paths }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - use_regular_old_pip == True
+    - django_use_regular_old_pip == True
 
 - name: Install pipenv
   pip:
     name: pipenv
     state: latest
-    virtualenv: "{{ venv_path }}"
-    virtualenv_python: "{{ python_version }}"
-  become_user: "{{ system_user }}"
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+  become_user: "{{ django_system_user }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - use_pipenv == True
+    - django_use_pipenv == True
 
 - name: Install Python packages using pipenv
-  shell: source {{ venv_path }}/bin/activate && pipenv sync --python {{ python_source_version }}
-  become_user: "{{ system_user }}"
+  shell: source {{ django_venv_path }}/bin/activate && pipenv sync --python {{ django_python_source_version }}
+  become_user: "{{ django_system_user }}"
   args:
-    chdir: "{{ checkout_path }}"
+    chdir: "{{ django_checkout_path }}"
     executable: /bin/bash
   when:
-    - use_pipenv == True
+    - django_use_pipenv == True
 
 - name: Install other python packages using pip
   pip:
-    name: "{{ pip_packages }}"
+    name: "{{ django_pip_packages }}"
     state: latest
-    virtualenv: "{{ venv_path }}"
-    virtualenv_python: "{{ python_version }}"
-  become_user: "{{ system_user }}"
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+  become_user: "{{ django_system_user }}"
 
 - name: Copy local settings from template
   template:
     src: local_settings.py.j2
-    dest: "{{ local_settings_path }}"
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    dest: "{{ django_local_settings_path }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
     mode: 0644

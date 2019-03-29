@@ -2,22 +2,22 @@
 - name: reload systemctl
   command: systemctl daemon-reload
   when:
-    - manage_services == True
+    - django_manage_services == True
 
 - name: restart_service
   service:
-    name: "{{ service_name }}"
+    name: "{{ django_service_name }}"
     state: restarted
   when:
-    - manage_services == True
+    - django_manage_services == True
 
 - name: restart_celery
   service:
     name: "{{ item }}"
     state: restarted
   with_items:
-    - "{{ celeryd_service_name }}"
-    - "{{ celerybeat_service_name }}"
+    - "{{ django_celeryd_service_name }}"
+    - "{{ django_celerybeat_service_name }}"
   when:
-    - enable_celery == True
-    - manage_services == True
+    - django_enable_celery == True
+    - django_manage_services == True
