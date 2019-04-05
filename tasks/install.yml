@@ -146,7 +146,7 @@
 
 - name: Copy local settings from template
   template:
-    src: local_settings.py.j2
+    src: "{{ django_settings_template_path }}"
     dest: "{{ django_local_settings_path }}"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
