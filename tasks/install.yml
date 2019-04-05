@@ -51,7 +51,7 @@
 
 - name: Copy git key
   copy:
-    content: "{{ django_git_key }}"
+    src: "{{ django_git_key }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
     mode: 0600
