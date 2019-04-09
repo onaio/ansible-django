@@ -49,9 +49,9 @@
     - "{{ django_media_path }}"
     - "{{ django_system_user_home }}/.ssh"
 
-- name: Copy git key
+- name: Copy git key from string
   copy:
-    src: "{{ django_git_key }}"
+    content: "{{ django_git_key }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
     mode: 0600
@@ -59,6 +59,17 @@
   when:
     - django_git_key is defined
     - django_git_key is not none
+
+- name: Copy git key from file
+  copy:
+    src: "{{ django_git_key }}"
+    dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
+    owner: "{{ django_system_user }}"
+    mode: 0600
+  no_log: False
+  when:
+    - django_git_key_ssh_file is defined
+    - django_git_key_ssh_file is not none
 
 - name: Git clone with key
   git:
