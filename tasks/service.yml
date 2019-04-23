@@ -1,4 +1,14 @@
 ---
+- name: Copy the service environment file
+  template:
+    src: "etc/default/django_service_name.j2"
+    dest: "/etc/default/{{ django_service_name }}"
+    mode: 0640
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
+  notify:
+    - restart_service
+
 - name: Copy upstart scripts
   template:
     src: "etc/systemd/django.service.j2"

@@ -9,7 +9,8 @@ RuntimeDirectory={{ django_service_name }}
 WorkingDirectory={{ django_codebase_path }}
 User={{ django_system_user }}
 Group={{ django_service_group }}
-ExecStart={{ django_venv_path }}/bin/uwsgi --ini {{ django_codebase_path }}/uwsgi.ini --env DJANGO_SETTINGS_MODULE={{ django_settings_module }}
+EnvironmentFile=-/etc/default/{{ django_service_name }}
+ExecStart={{ django_venv_path }}/bin/uwsgi --ini {{ django_codebase_path }}/uwsgi.ini
 
 
 [Install]
