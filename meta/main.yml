@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: django
   author: Ona Engineering
   company: Ona Systems Inc
   description: Install and configure Django
