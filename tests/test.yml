@@ -40,6 +40,7 @@
       - 'celery==3.1.24'
       - uwsgi
       - 'redis==2.10.6'
+      - 'django==1.11'
     django_top_python_statements:
       - import os
       - from decimal import Decimal
