@@ -36,6 +36,8 @@ django_venv_path: "{{ django_system_user_home }}/.virtualenvs/{{ django_system_u
 django_log_path: "/var/log/{{ django_service_name }}"
 django_pid_file: "{{ django_pid_socks_dir }}/{{ django_service_name }}.pid"
 django_proxy_read_timeout: "300s"
+django_environment_script_name: environment.sh
+django_environment_vars: []
 
 # Python packages
 django_recreate_virtual_env: False
