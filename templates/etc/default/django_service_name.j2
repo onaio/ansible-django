@@ -1,0 +1,6 @@
+DJANGO_SETTINGS_MODULE="{{ django_settings_module }}"
+{% for cur_item in django_environment_vars %}
+{% for var_name,var_value in cur_item.items() %}
+{{ var_name }}={{ var_value }}
+{% endfor %}
+{% endfor %}

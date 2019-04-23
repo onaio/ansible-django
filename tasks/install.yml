@@ -151,3 +151,11 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     mode: 0644
+
+- name: Copy the environment script
+  template:
+    src: "django_checkout_path/django_environment_script_name.j2"
+    dest: "{{ django_checkout_path }}/{{ django_environment_script_name }}"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
+    mode: 0750
