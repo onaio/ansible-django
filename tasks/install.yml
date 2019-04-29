@@ -1,3 +1,8 @@
+- name: Add system group
+  group:
+    name: "{{ django_system_group }}"
+    state: present
+
 - name: Add system user
   user:
     name: "{{ django_system_user }}"
