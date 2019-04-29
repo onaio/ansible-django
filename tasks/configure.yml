@@ -7,9 +7,10 @@
   with_items: "{{ django_init_commands }}"
   become_user: "{{ django_system_user }}"
 
-- name: Changing static folder permission
+- name: Make sure the static folder exists
   file:
     path: "{{ django_static_path }}"
+    state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     mode: 0755
@@ -17,9 +18,10 @@
     - django_static_path is defined
     - django_static_path is not none
 
-- name: Changing mediafolder permission
+- name: Make sure the mediafolder exists
   file:
     path: "{{ django_media_path }}"
+    state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     mode: 0755

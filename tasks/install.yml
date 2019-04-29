@@ -50,11 +50,8 @@
   with_items:
     - "{{ django_pid_socks_dir }}"
     - "{{ django_versioned_path }}"
-    - "{{ django_checkout_path }}"
     - "{{ django_venv_path }}"
     - "{{ django_log_path }}"
-    - "{{ django_static_path }}"
-    - "{{ django_media_path }}"
     - "{{ django_system_user_home }}/.ssh"
 
 - name: Copy git key from string
