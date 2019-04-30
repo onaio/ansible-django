@@ -7,8 +7,10 @@ django_system_user_home: "/home/{{ django_system_user }}"
 django_git_url:
 django_git_version: "master"
 django_git_key:
+django_git_key_ssh_file:
 django_git_key_filename: "id_ed25519"
 django_remove_git_key: True
+django_copy_key_from_file: false
 
 # system-wide dependencies
 django_python_source_version: "3.6"
@@ -63,6 +65,9 @@ django_init_commands:
 django_static_path: "/var/www/static/"
 django_media_path: "/var/www/media/"
 django_settings_module:
+
+# template settings path
+django_settings_template_path: "../templates/local_settings.py.j2"
 
 ## Django settings
 django_settings:

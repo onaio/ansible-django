@@ -29,7 +29,7 @@
     django_git_version: "master"
     django_celery_app: "picha"
     django_python_source_version: "2.7"
-    django_python_version: "python2.7"
+    django_python_version: "python3.6"
     django_enable_celery: True
     django_local_settings_path: "{{ django_checkout_path }}/picha/local_settings.py"
     django_settings_module: "picha.settings"
@@ -37,7 +37,7 @@
     django_init_commands:
       - migrate --noinput
     django_pip_packages:
-      - celery
+      - 'celery==3.1.24'
       - uwsgi
       - 'redis==2.10.6'
       - 'django==1.11'
