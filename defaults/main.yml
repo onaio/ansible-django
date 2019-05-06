@@ -117,7 +117,7 @@ django_wsgi_http:
 django_wsgi_socket: "{{ django_pid_socks_dir }}/{{ django_service_name }}.sock"
 django_wsgi_chmod_socket: 777
 django_wsgi_user: "{{ django_system_user }}"
-django_wsgi_group: "www-data"
+django_wsgi_group: "{{ django_system_group }}"
 django_wsgi_vacuum: True
 django_wsgi_master: True
 django_wsgi_logto: "{{ django_log_path }}/uwsgi_{{ django_service_name }}.log"
