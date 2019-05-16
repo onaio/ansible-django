@@ -36,3 +36,9 @@ CELERY_CREATE_DIRS=1
 C_FORCE_ROOT=1
 CELERYD_LOG_LEVEL="{{ django_celeryd_log_level }}"
 DJANGO_SETTINGS_MODULE="{{ django_settings_module }}"
+
+{% if django_celeryd_extra_env_vars | length > 0 %}
+{% for var_name,var_value in django_celeryd_extra_env_vars.items() %}
+{{ var_name }}={{ var_value }}
+{% endfor %}
+{% endif %}

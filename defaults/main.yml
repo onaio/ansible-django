@@ -40,6 +40,8 @@ django_pid_file: "{{ django_pid_socks_dir }}/{{ django_service_name }}.pid"
 django_proxy_read_timeout: "300s"
 django_environment_script_name: environment.sh
 django_environment_vars: []
+django_celeryd_extra_env_vars: []
+django_celerybeat_extra_env_vars: []
 
 # Python packages
 # Set django_apt_python_ppa to blank string if you don't want to install any PPA
