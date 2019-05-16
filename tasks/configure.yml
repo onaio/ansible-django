@@ -24,7 +24,7 @@
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0755
+    mode: "{{ django_media_path_mode }}"
   when:
     - django_media_path is defined
     - django_media_path is not none

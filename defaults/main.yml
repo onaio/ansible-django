@@ -68,6 +68,7 @@ django_init_commands:
   - collectstatic --noinput
 django_static_path: "/var/www/static/"
 django_media_path: "/var/www/media/"
+django_media_path_mode: "0755"
 django_settings_module:
 
 # template settings path
