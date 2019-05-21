@@ -1,3 +1,8 @@
+- name: Add system group
+  group:
+    name: "{{ django_system_group }}"
+    state: present
+
 - name: Add system user
   user:
     name: "{{ django_system_user }}"
@@ -6,10 +11,13 @@
     append: yes
     createhome: yes
 
-- name: Add deadsnakes ppa
-  shell: "add-apt-repository ppa:deadsnakes/ppa -y"
+- name: Add Python PPA
+  apt_repository:
+    repo: "{{ django_apt_python_ppa }}"
+    state: present
   become: true
   become_user: root
+  when: django_apt_python_ppa is defined and django_apt_python_ppa != ""
 
 - name: Update apt cache
   apt:
@@ -42,11 +50,8 @@
   with_items:
     - "{{ django_pid_socks_dir }}"
     - "{{ django_versioned_path }}"
-    - "{{ django_checkout_path }}"
     - "{{ django_venv_path }}"
     - "{{ django_log_path }}"
-    - "{{ django_static_path }}"
-    - "{{ django_media_path }}"
     - "{{ django_system_user_home }}/.ssh"
 
 - name: Copy git key from string

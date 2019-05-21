@@ -31,3 +31,9 @@ CELERYBEAT_PID_FILE="/var/run/{{ django_system_user }}/celerybeat.pid"
 # in this case is just settings and not the full path because it will change the dir to
 # the project folder first.
 DJANGO_SETTINGS_MODULE="{{ django_settings_module }}"
+
+{% if django_celerybeat_extra_env_vars | length > 0 %}
+{% for var_name,var_value in django_celerybeat_extra_env_vars.items() %}
+{{ var_name }}={{ var_value }}
+{% endfor %}
+{% endif %}

@@ -15,7 +15,6 @@
     dest: /etc/systemd/system/{{ item }}
     mode: 0644
   notify:
-    - reload systemctl
     - restart_service
   with_items:
     - "{{ django_service_name }}.service"

@@ -40,8 +40,12 @@ django_pid_file: "{{ django_pid_socks_dir }}/{{ django_service_name }}.pid"
 django_proxy_read_timeout: "300s"
 django_environment_script_name: environment.sh
 django_environment_vars: []
+django_celeryd_extra_env_vars: []
+django_celerybeat_extra_env_vars: []
 
 # Python packages
+# Set django_apt_python_ppa to blank string if you don't want to install any PPA
+django_apt_python_ppa: "ppa:deadsnakes/ppa"
 django_recreate_virtual_env: False
 
 ## pipenv
@@ -64,6 +68,7 @@ django_init_commands:
   - collectstatic --noinput
 django_static_path: "/var/www/static/"
 django_media_path: "/var/www/media/"
+django_media_path_mode: "0755"
 django_settings_module:
 
 # template settings path
@@ -115,7 +120,7 @@ django_wsgi_http:
 django_wsgi_socket: "{{ django_pid_socks_dir }}/{{ django_service_name }}.sock"
 django_wsgi_chmod_socket: 777
 django_wsgi_user: "{{ django_system_user }}"
-django_wsgi_group: "www-data"
+django_wsgi_group: "{{ django_system_group }}"
 django_wsgi_vacuum: True
 django_wsgi_master: True
 django_wsgi_logto: "{{ django_log_path }}/uwsgi_{{ django_service_name }}.log"

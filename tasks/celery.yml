@@ -17,7 +17,6 @@
     dest: "/etc/systemd/system/{{ django_celeryd_service_name }}.service"
     mode: 0644
   notify:
-    - reload systemctl
     - restart_celery
 
 - name: Copy celerybeat upstart script
@@ -26,5 +25,4 @@
     dest: "/etc/systemd/system/{{ django_celerybeat_service_name }}.service"
     mode: 0644
   notify:
-    - reload systemctl
     - restart_celery
