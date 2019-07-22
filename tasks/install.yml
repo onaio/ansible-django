@@ -42,7 +42,7 @@
   file:
     state: directory
     owner: "{{ django_system_user }}"
-    group: www-data
+    group: "{{ django_system_group }}"
     path: "{{ item }}"
   when:
     - item is defined
