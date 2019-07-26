@@ -50,3 +50,11 @@
     group: "{{ django_system_group }}"
   notify:
     - restart_service
+
+- name: customize logrotate rules
+  template:
+    src: etc/logrotate.d/django.j2
+    dest: "/etc/logrotate.d/{{ django_service_name }}"
+    owner: root
+    group: root
+    mode: 0644

@@ -1,0 +1,9 @@
+"{{ django_log_path }}/*.log" "{{ django_wsgi_logto }}" {
+    copytruncate
+    daily
+    rotate 52
+    compress
+    delaycompress
+    missingok
+    notifempty
+}
