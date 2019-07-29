@@ -21,7 +21,7 @@ CELERY_APP="{{ django_celery_app }}"
 #CELERY_CONFIG_MODULE="celeryconfig"
 
 # %n will be replaced with the nodename.
-CELERYD_LOG_FILE="/var/log/{{ django_system_user }}/celery-%n.log"
+CELERYD_LOG_FILE="{{ django_log_path }}/celery-%n.log"
 {% if django_celeryd_pid_file %}
 CELERYD_PID_FILE="{{ django_celeryd_pid_file }}"
 {% else %}
