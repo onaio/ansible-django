@@ -141,5 +141,7 @@ django_celerybeat_service_name: "celerybeat-{{ django_service_name }}"
 django_celeryd_opts: "--time-limit=300 --concurrency=8"
 django_celeryd_log_level: "INFO"
 django_celerybeat_log_level: "INFO"
-django_celeryd_pid_file:
-django_celery_beat_pid_file:
+django_celeryd_pid_directory: "/run/celery-{{ django_system_user }}"
+django_celeryd_pid_file: "{{ django_celeryd_pid_directory }}/%n.pid"
+django_celery_beat_pid_directory: "/var/run/{{ django_system_user }}"
+django_celery_beat_pid_file: "{{ django_celery_beat_pid_directory }}/celerybeat.pid"
