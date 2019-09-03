@@ -1,4 +1,17 @@
 ---
+- name: Ensure celery pid directories are present
+  file:
+    state: directory
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
+    path: "{{ item }}"
+  when:
+    - item is defined
+    - item is not none
+  with_items:
+    - "{{ django_celeryd_pid_directory }}"
+    - "{{ django_celery_beat_pid_directory }}"
+
 - name: Copy celeryd default script
   template:
     src: templates/etc/default/celeryd.j2

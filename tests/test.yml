@@ -41,6 +41,7 @@
       - uwsgi
       - 'redis==2.10.6'
       - 'django==1.11'
+      - requests
     django_top_python_statements:
       - import os
       - from decimal import Decimal

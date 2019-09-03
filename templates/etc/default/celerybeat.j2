@@ -20,13 +20,9 @@ C_FORCE_ROOT=1
 CELERYBEAT_LOG_LEVEL="{{ django_celerybeat_log_level }}"
 CELERYBEAT_LOG_FILE="{{ django_log_path }}/celerybeat.log"
 CELERY_CREATE_DIRS=1
-CELERYBEAT_SCHEDULE="/var/run/{{ django_system_user }}/celerybeat-schedule"
-CELERYBEAT_STATE_DIR="/var/run/{{ django_system_user }}/celerybeat"
-{% if django_celery_beat_pid_file %}
+CELERYBEAT_SCHEDULE="{{ django_celery_beat_pid_directory }}/celerybeat-schedule"
+CELERYBEAT_STATE_DIR="{{ django_celery_beat_pid_directory }}/celerybeat"
 CELERYBEAT_PID_FILE="{{ django_celery_beat_pid_file }}"
-{% else %}
-CELERYBEAT_PID_FILE="/var/run/{{ django_system_user }}/celerybeat.pid"
-{% endif %}
 # Name of the projects settings module.
 # in this case is just settings and not the full path because it will change the dir to
 # the project folder first.
