@@ -22,11 +22,7 @@ CELERY_APP="{{ django_celery_app }}"
 
 # %n will be replaced with the nodename.
 CELERYD_LOG_FILE="{{ django_log_path }}/celery-%n.log"
-{% if django_celeryd_pid_file %}
 CELERYD_PID_FILE="{{ django_celeryd_pid_file }}"
-{% else %}
-CELERYD_PID_FILE="/run/celery-{{ django_system_user }}/%n.pid"
-{% endif %}
 
 # Workers should run as an unprivileged user.
 CELERYD_USER="{{ django_system_user }}"
