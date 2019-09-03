@@ -1,25 +1,16 @@
 ---
-- name: Ensure celeryd pid default directory is present
+- name: Ensure celery pid directories are present
   file:
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     path: "{{ item }}"
   when:
-    - django_celeryd_pid_file is none
+    - item is defined
+    - item is not none
   with_items:
-    - "/var/run/celery-{{ django_system_user }}"
-
-- name: Ensure celerybeat pid default directory is present
-  file:
-    state: directory
-    owner: "{{ django_system_user }}"
-    group: "{{ django_system_group }}"
-    path: "{{ item }}"
-  when:
-    - django_celery_beat_pid_file is none
-  with_items:
-    - "/var/run/{{ django_system_user }}"
+    - "{{ django_celeryd_pid_directory }}"
+    - "{{ django_celery_beat_pid_directory }}"
 
 - name: Copy celeryd default script
   template:
