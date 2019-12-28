@@ -10,9 +10,14 @@ galaxy_info:
       - all
 
 dependencies:
- - role: ANXS.python
-   become: true
-   become_user: "root"
-   python_source_version: "{{ django_python_source_version }}"
-   tags:
-    - python
+  - role: ANXS.python
+    become: true
+    become_user: "root"
+    python_source_version: "{{ django_python_source_version }}"
+    python_packages:
+      - "{{ django_python_version }}"
+      - "{{ django_python_version }}-dev"
+      - python3-setuptools
+      - python3-pip
+    tags:
+      - python
