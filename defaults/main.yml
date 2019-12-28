@@ -44,8 +44,6 @@ django_celeryd_extra_env_vars: []
 django_celerybeat_extra_env_vars: []
 
 # Python packages
-# Set django_apt_python_ppa to blank string if you don't want to install any PPA
-django_apt_python_ppa: "ppa:deadsnakes/ppa"
 django_recreate_virtual_env: False
 
 ## pipenv

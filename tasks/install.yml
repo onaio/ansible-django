@@ -11,14 +11,6 @@
     append: yes
     createhome: yes
 
-- name: Add Python PPA
-  apt_repository:
-    repo: "{{ django_apt_python_ppa }}"
-    state: present
-  become: true
-  become_user: root
-  when: django_apt_python_ppa is defined and django_apt_python_ppa != ""
-
 - name: Update apt cache
   apt:
     update_cache: "yes"
