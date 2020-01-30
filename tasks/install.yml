@@ -162,6 +162,14 @@
     virtualenv_python: "{{ django_python_version }}"
   become_user: "{{ django_system_user }}"
 
+- name: Make sure the local settings directory is present
+  file:
+    path: "{{ django_local_settings_path | dirname }}"
+    state: directory
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
+    mode: 0750
+
 - name: Copy local settings from template
   template:
     src: "{{ django_settings_template_path }}"
