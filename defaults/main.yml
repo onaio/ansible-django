@@ -6,7 +6,7 @@ django_system_user_home: "/home/{{ django_system_user }}"
 # git
 django_git_url:
 django_git_version: "master"
-django_git_key:
+django_git_key_content:
 django_git_key_ssh_file:
 django_git_key_filename: "id_ed25519"
 django_remove_git_key: True
