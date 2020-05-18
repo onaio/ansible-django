@@ -83,17 +83,6 @@
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
 
-- name: Remove Git Key
-  file:
-    state: absent
-    path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
-  become: True
-  become_user: "{{ django_system_user }}"
-  when:
-    - django_git_key_content is defined or django_git_key_ssh_file is defined
-    - django_git_key_content is not none or django_git_key_ssh_file is not none
-    - django_remove_git_key == True
-
 - name: Git clone without key
   git:
     accept_hostkey: "yes"
@@ -154,6 +143,28 @@
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
   become_user: "{{ django_system_user }}"
+
+- name: Install packages from Github
+  become: True
+  become_user: "{{ django_system_user }}"
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+    extra_args: "-e"
+  with_items: "{{ django_optional_git_packages }}"
+  when: django_optional_git_packages is defined and django_use_regular_old_pip
+
+- name: Remove Git Key
+  file:
+    state: absent
+    path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
+  become: True
+  become_user: "{{ django_system_user }}"
+  when:
+    - django_git_key_content is defined or django_git_key_ssh_file is defined
+    - django_git_key_content is not none or django_git_key_ssh_file is not none
+    - django_remove_git_key == True
 
 - name: Make sure the local settings directory is present
   file:

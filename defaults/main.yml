@@ -11,6 +11,7 @@ django_git_key_ssh_file:
 django_git_key_filename: "id_ed25519"
 django_remove_git_key: True
 django_copy_key_from_file: false
+django_optional_git_packages:
 
 # system-wide dependencies
 django_python_source_version: "3.6"
