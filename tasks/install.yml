@@ -83,6 +83,15 @@
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
 
+- name: Ensure Github is in the known hosts file
+  known_hosts:
+    path: "{{ django_system_user_home }}/.ssh/known_hosts"
+    name: github.com
+    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+  when:
+    - django_git_key_content is defined or django_git_key_ssh_file is defined
+    - django_git_key_content is not none or django_git_key_ssh_file is not none
+
 - name: Git clone without key
   git:
     accept_hostkey: "yes"
