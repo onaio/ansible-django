@@ -6,19 +6,22 @@ django_system_user_home: "/home/{{ django_system_user }}"
 # git
 django_git_url:
 django_git_version: "master"
-django_git_key:
+django_git_key_content:
 django_git_key_ssh_file:
 django_git_key_filename: "id_ed25519"
 django_remove_git_key: True
 django_copy_key_from_file: false
+django_optional_git_packages:
 
 # system-wide dependencies
 django_python_source_version: "3.6"
-django_python_version: "python3.6"  # or python3.x
+django_python_version: "python3.6" # or python3.x
+django_python_packages:
+  - python3.6
+  - python3.6-dev
 django_system_wide_dependencies:
   - build-essential
   - git
-  - python3.6-dev
 
 # service
 django_service_name: "{{ django_system_user }}"

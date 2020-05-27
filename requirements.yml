@@ -1,3 +1,5 @@
 ---
-- name: ANXS.python
-  version: v2.0.0
+- src: https://github.com/DavisRayM/python
+  name: DavisRayM.python
+  scm: git
+  version: 0c10923ef95aaa97ccdf246fce1898330061807a

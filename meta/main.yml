@@ -10,9 +10,11 @@ galaxy_info:
       - all
 
 dependencies:
- - role: ANXS.python
+ - role: DavisRayM.python
    become: true
    become_user: "root"
    python_source_version: "{{ django_python_source_version }}"
+   python_packages: "{{ django_python_packages }}"
+   python_apt_ppa: "{{ django_apt_python_ppa }}"
    tags:
     - python
