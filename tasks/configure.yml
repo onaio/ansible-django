@@ -37,6 +37,7 @@
     force: yes
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
+  become_user: "{{ django_system_user }}"
   notify:
     - restart_service
     - restart_celery
