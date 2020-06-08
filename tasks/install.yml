@@ -162,7 +162,9 @@
     virtualenv_python: "{{ django_python_version }}"
     extra_args: "-e"
   with_items: "{{ django_optional_git_packages }}"
-  when: django_optional_git_packages is defined and django_use_regular_old_pip
+  when:
+    - django_optional_git_packages is defined and django_optional_git_packages|length > 0
+    - django_use_regular_old_pip == True
 
 - name: Remove Git Key
   file:
