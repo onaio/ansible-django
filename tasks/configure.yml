@@ -37,10 +37,10 @@
     src: "{{ django_checkout_path }}"
     dest: "{{ django_codebase_path }}"
     state: link
-    force: yes
+    force: true
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    follow: no
+    follow: false
   become_user: "{{ django_system_user }}"
   notify:
     - restart_service
@@ -50,7 +50,7 @@
   template:
     src: uwsgi.ini.j2
     dest: "{{ django_checkout_path }}/uwsgi.ini"
-    mode: 0644
+    mode: "0644"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
@@ -62,4 +62,4 @@
     dest: "/etc/logrotate.d/{{ django_service_name }}"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"

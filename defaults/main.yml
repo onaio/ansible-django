@@ -9,7 +9,7 @@ django_git_version: "master"
 django_git_key_content:
 django_git_key_ssh_file:
 django_git_key_filename: "id_ed25519"
-django_remove_git_key: True
+django_remove_git_key: true
 django_copy_key_from_file: false
 django_optional_git_packages:
 
@@ -32,7 +32,7 @@ django_service_group: "{{ django_system_group }}"
 django_service_unit_after: "network.target"
 django_service_install_wantedby: "multi-user.target"
 django_pid_socks_dir: "/var/run/{{ django_service_name }}"
-django_manage_services: False
+django_manage_services: false
 
 django_env_name: "prod"
 django_codebase_path: "{{ django_system_user_home }}/app"
@@ -52,10 +52,10 @@ django_apt_python_ppa:
 django_recreate_virtual_env: false
 
 ## pipenv
-django_use_pipenv: False
+django_use_pipenv: false
 
 ## pip
-django_use_regular_old_pip: True
+django_use_regular_old_pip: true
 django_pip_paths:
   - "{{ django_checkout_path }}/requirements.txt"
 
@@ -107,7 +107,7 @@ django_settings:
   EMAIL_PORT: "1025"
   DEFAULT_FROM_EMAIL: "'Hello World <hello@example.com>'"
   ALLOWED_HOSTS: "[]"
-  DEBUG: True
+  DEBUG: True  # yamllint disable-line rule:truthy
 ## python statements included at the top of settings file
 django_top_python_statements:
   - import os
@@ -124,19 +124,19 @@ django_wsgi_socket: "{{ django_pid_socks_dir }}/{{ django_service_name }}.sock"
 django_wsgi_chmod_socket: 777
 django_wsgi_user: "{{ django_system_user }}"
 django_wsgi_group: "{{ django_system_group }}"
-django_wsgi_vacuum: True
-django_wsgi_master: True
+django_wsgi_vacuum: true
+django_wsgi_master: true
 django_wsgi_logto: "{{ django_log_path }}/uwsgi_{{ django_service_name }}.log"
 django_wsgi_virtualenv: "{{ django_venv_path }}"
 django_wsgi_static_map: "/static={{ django_static_path }}"
 django_wsgi_buffer_size: 8192
 django_wsgi_env: "HTTPS=on"
 django_wsgi_stats: "{{ django_pid_socks_dir }}/{{ django_service_name }}_stats.sock"
-django_wsgi_enable_threads: False
-django_wsgi_memory_report: False
+django_wsgi_enable_threads: false
+django_wsgi_memory_report: false
 
 # celery
-django_enable_celery: True
+django_enable_celery: true
 django_celery_app:
 django_celeryd_nodes: "{{ django_service_name }}"
 django_celeryd_service_name: "celeryd-{{ django_service_name }}"
