@@ -11,6 +11,9 @@ galaxy_info:
 
 dependencies:
  - role: DavisRayM.python
+   src: https://github.com/DavisRayM/python.git
+   scm: git
+   version: 069924bc388d428141eb531e7293bcea0238e6da
    become: true
    become_user: "root"
    python_source_version: "{{ django_python_source_version }}"
