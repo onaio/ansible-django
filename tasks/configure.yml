@@ -6,6 +6,9 @@
     virtualenv: "{{ django_venv_path }}"
   with_items: "{{ django_init_commands }}"
   become_user: "{{ django_system_user }}"
+  when:
+    - django_init_commands is defined
+    - django_init_commands is not none
 
 - name: Make sure the static folder exists
   file:
