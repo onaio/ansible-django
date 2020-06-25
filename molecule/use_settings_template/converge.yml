@@ -1,0 +1,25 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: ansible-django
+      django_system_user: "django_example_app"
+      django_system_user_home: "/home/{{ django_system_user }}"
+      django_recreate_virtual_env: false
+      django_codebase_path: "{{ django_system_user_home }}/app"
+      django_versioned_path: "{{ django_codebase_path }}-versioned"
+      django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
+      django_git_url: "https://github.com/onaio/kaznet-web"
+      django_git_version: "v1.1.8"
+      django_celery_app: "kaznet"
+      django_python_source_version: "3.6"
+      django_python_version: "python3.6"
+      django_use_pipenv: true
+      django_use_regular_old_pip: false
+      django_manage_services: true
+      django_enable_celery: true
+      django_local_settings_path: "{{ django_checkout_path }}/kaznet/settings/local_settings.py"
+      django_settings_module: "kaznet.settings.local_settings"
+      django_wsgi_module: "kaznet.wsgi:application"
+      django_settings_template_path: "molecule/use_settings_template/templates/local_settings.py.j2"
+      django_init_commands:

@@ -1,0 +1,5 @@
+---
+- src: https://github.com/DavisRayM/python
+  name: DavisRayM.python
+  scm: git
+  version: 069924bc388d428141eb531e7293bcea0238e6da
