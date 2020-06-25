@@ -14,6 +14,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.network "forwarded_port", guest: 8000, host: 8888
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "ubuntu/bionic64"
   config.ssh.forward_agent = true
 end
