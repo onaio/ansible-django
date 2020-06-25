@@ -5,6 +5,7 @@
     app_path: "{{ django_checkout_path }}"
     virtualenv: "{{ django_venv_path }}"
   with_items: "{{ django_init_commands }}"
+  become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_init_commands is defined
@@ -16,7 +17,7 @@
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0755
+    mode: "0755"
   when:
     - django_static_path is defined
     - django_static_path is not none
@@ -41,6 +42,7 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     follow: false
+  become: true
   become_user: "{{ django_system_user }}"
   notify:
     - restart_service

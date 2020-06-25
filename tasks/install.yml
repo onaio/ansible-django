@@ -18,7 +18,7 @@
 - name: Install system-wide dependencies
   apt:
     name: "{{ django_system_wide_dependencies }}"
-    state: latest
+    state: present
     update_cache: true
     cache_valid_time: 600
 
@@ -109,7 +109,7 @@
 - name: Upgrade pip to latest version
   pip:
     name: pip
-    state: latest
+    state: present
 
 - name: Install Python packages using pip
   pip:
@@ -117,40 +117,44 @@
     requirements: "{{ item }}"
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
   with_items: "{{ django_pip_paths }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - django_use_regular_old_pip == True
+    - django_use_regular_old_pip| bool
 
 - name: Install pipenv
   pip:
     name: pipenv
-    state: latest
+    state: present
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - django_use_pipenv == True
+    - django_use_pipenv| bool
 
 - name: Install Python packages using pipenv
   shell: source {{ django_venv_path }}/bin/activate && pipenv sync --python {{ django_python_source_version }}
+  become: true
   become_user: "{{ django_system_user }}"
   args:
     chdir: "{{ django_checkout_path }}"
     executable: /bin/bash
   when:
-    - django_use_pipenv == True
+    - django_use_pipenv| bool
 
 - name: Install other python packages using pip
   pip:
     name: "{{ django_pip_packages }}"
-    state: latest
+    state: present
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
 
 - name: Install packages from Github
@@ -173,7 +177,7 @@
   when:
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
-    - django_remove_git_key == True
+    - django_remove_git_key| bool
 
 - name: Make sure the local settings directory is present
   file:

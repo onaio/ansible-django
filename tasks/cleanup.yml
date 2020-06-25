@@ -1,7 +1,9 @@
 ---
 - name: Get previous app deploy listing
-  shell: ls -tr1 chdir={{ django_versioned_path }}
+  command: ls -tr1 chdir={{ django_versioned_path }}
   register: versioned_list
+  tags:
+    - skip_ansible_lint
 
 - name: Remove extra files from app directroy
   file:

@@ -2,6 +2,7 @@ galaxy_info:
   role_name: django
   author: Ona Engineering
   company: Ona Systems Inc
+  license: Apache-2.0
   description: Install and configure Django
   min_ansible_version: 2.6
   platforms:
