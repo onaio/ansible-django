@@ -1,0 +1,36 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ansible-django-ubuntu-18.04
+    image: solita/ubuntu-systemd:18.04
+    dockerfile: Dockerfile.j2
+    privileged: true
+    command: /sbin/init
+    env:
+      LC_ALL: "C.UTF-8"
+      LANG: "C.UTF-8"
+provisioner:
+  name: ansible
+scenario:
+  name: use_settings_template
+  test_sequence:
+    - lint
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - side_effect
+    - verify
+    - destroy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+verifier:
+  name: testinfra

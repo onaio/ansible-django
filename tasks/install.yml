@@ -8,8 +8,8 @@
     name: "{{ django_system_user }}"
     shell: /bin/bash
     group: "{{ django_system_group }}"
-    append: yes
-    createhome: yes
+    append: true
+    createhome: true
 
 - name: Update apt cache
   apt:
@@ -18,8 +18,8 @@
 - name: Install system-wide dependencies
   apt:
     name: "{{ django_system_wide_dependencies }}"
-    state: latest
-    update_cache: yes
+    state: present
+    update_cache: true
     cache_valid_time: 600
 
 - name: Delete virtualenv
@@ -51,8 +51,8 @@
     content: "{{ django_git_key_content }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
-    mode: 0600
-  no_log: False
+    mode: "0600"
+  no_log: false
   when:
     - django_git_key_content is defined
     - django_git_key_content is not none
@@ -62,8 +62,8 @@
     src: "{{ django_git_key_ssh_file }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
-    mode: 0600
-  no_log: False
+    mode: "0600"
+  no_log: false
   when:
     - django_git_key_ssh_file is defined
     - django_git_key_ssh_file is not none
@@ -74,10 +74,10 @@
     repo: "{{ django_git_url }}"
     dest: "{{ django_checkout_path }}"
     version: "{{ django_git_version }}"
-    depth: 1
+    depth: "1"
     key_file: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
-    force: True
-  become: True
+    force: true
+  become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_git_key_content is defined or django_git_key_ssh_file is defined
@@ -98,9 +98,9 @@
     repo: "{{ django_git_url }}"
     dest: "{{ django_checkout_path }}"
     version: "{{ django_git_version }}"
-    depth: 1
-    force: True
-  become: True
+    depth: "1"
+    force: true
+  become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_git_key_content is not defined or django_git_key_content is none
@@ -109,7 +109,7 @@
 - name: Upgrade pip to latest version
   pip:
     name: pip
-    state: latest
+    state: present
 
 - name: Install Python packages using pip
   pip:
@@ -117,44 +117,48 @@
     requirements: "{{ item }}"
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
   with_items: "{{ django_pip_paths }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - django_use_regular_old_pip == True
+    - django_use_regular_old_pip| bool
 
 - name: Install pipenv
   pip:
     name: pipenv
-    state: latest
+    state: present
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ ansible_user_dir }}/.local/bin"
   when:
-    - django_use_pipenv == True
+    - django_use_pipenv| bool
 
 - name: Install Python packages using pipenv
   shell: source {{ django_venv_path }}/bin/activate && pipenv sync --python {{ django_python_source_version }}
+  become: true
   become_user: "{{ django_system_user }}"
   args:
     chdir: "{{ django_checkout_path }}"
     executable: /bin/bash
   when:
-    - django_use_pipenv == True
+    - django_use_pipenv| bool
 
 - name: Install other python packages using pip
   pip:
     name: "{{ django_pip_packages }}"
-    state: latest
+    state: present
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+  become: true
   become_user: "{{ django_system_user }}"
 
 - name: Install packages from Github
-  become: True
+  become: true
   become_user: "{{ django_system_user }}"
   pip:
     name: "{{ item }}"
@@ -168,12 +172,12 @@
   file:
     state: absent
     path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
-  become: True
+  become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
-    - django_remove_git_key == True
+    - django_remove_git_key| bool
 
 - name: Make sure the local settings directory is present
   file:
@@ -181,7 +185,7 @@
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0750
+    mode: "0750"
 
 - name: Copy local settings from template
   template:
@@ -189,7 +193,7 @@
     dest: "{{ django_local_settings_path }}"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0644
+    mode: "0644"
 
 - name: Copy the environment script
   template:
@@ -197,4 +201,4 @@
     dest: "{{ django_checkout_path }}/{{ django_environment_script_name }}"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0750
+    mode: "0750"

@@ -2,6 +2,7 @@ galaxy_info:
   role_name: django
   author: Ona Engineering
   company: Ona Systems Inc
+  license: Apache-2.0
   description: Install and configure Django
   min_ansible_version: 2.6
   platforms:
@@ -11,6 +12,9 @@ galaxy_info:
 
 dependencies:
  - role: DavisRayM.python
+   src: https://github.com/DavisRayM/python.git
+   scm: git
+   version: 069924bc388d428141eb531e7293bcea0238e6da
    become: true
    become_user: "root"
    python_source_version: "{{ django_python_source_version }}"

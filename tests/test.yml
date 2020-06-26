@@ -13,41 +13,37 @@
         test -e /usr/bin/sudo || apt install -y sudo
       register: output
       changed_when: output.stdout|trim() != ""
-  gather_facts: False
-  become: True
+  gather_facts: false
+  become: true
 
 - name: Test Django role
   hosts: all
   vars:
     django_system_user: "django_example_app"
     django_system_user_home: "/home/{{ django_system_user }}"
-    django_recreate_virtual_env: False
+    django_recreate_virtual_env: false
     django_codebase_path: "{{ django_system_user_home }}/app"
     django_versioned_path: "{{ django_codebase_path }}-versioned"
     django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
-    django_git_url: "https://github.com/moshthepitt/picha"
-    django_git_version: "master"
-    django_celery_app: "picha"
+    django_git_url: "https://github.com/onaio/kaznet-web"
+    django_git_version: "v1.1.8"
+    django_celery_app: "kaznet"
     django_python_source_version: "3.6"
     django_python_version: "python3.6"
-    django_enable_celery: True
-    django_local_settings_path: "{{ django_checkout_path }}/picha/local_settings.py"
-    django_settings_module: "picha.settings"
-    django_wsgi_module: "picha.wsgi:application"
+    django_use_pipenv: true
+    django_use_regular_old_pip: false
+    django_manage_services: true
+    django_enable_celery: true
+    django_local_settings_path: "{{ django_checkout_path }}/kaznet/settings/local_settings.py"
+    django_settings_module: "kaznet.settings.local_settings"
+    django_wsgi_module: "kaznet.wsgi:application"
     django_init_commands:
-      - migrate --noinput
-    django_pip_packages:
-      - 'celery==3.1.24'
-      - uwsgi
-      - 'redis==2.10.6'
-      - 'django==1.11'
-      - requests
     django_top_python_statements:
       - import os
       - from decimal import Decimal
     django_bottom_python_statements:
-      - test_var = Decimal(16)
-  gather_facts: True
-  become: True
+      - SECRET_KEY = "secret"
+  gather_facts: true
+  become: true
   roles:
     - role: ../..

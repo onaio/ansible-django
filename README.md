@@ -82,7 +82,7 @@ django_settings:
 
 ## Role Dependencies ##
 
-* ANXS.python
+* DavisRayM.python
 
 You can install these by running the following ansible command:
 
@@ -92,9 +92,9 @@ ansible-galaxy install -r requirements.yml
 
 ## Testing ##
 
-This project comes with a Vagrantfile, this is a fast and easy way to test changes to the role, fire it up with `vagrant up`.
+This project utilizes molecule for testing, the molecule tool can be installed by running `pip install 'molecule[docker]'` after which tests can run with `molecule test --all`
 
-See [vagrant docs](https://docs.vagrantup.com/v2/) for getting setup with vagrant
+This project also comes with a Vagrantfile, which is a fast and easy alternative to test changes to the role, fire it up with `vagrant up`. _See [vagrant docs](https://docs.vagrantup.com/v2/) for getting setup with vagrant_
 
 ## License ##
 

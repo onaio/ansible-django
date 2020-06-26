@@ -6,7 +6,7 @@
     enabled: true
     daemon_reload: true
   when:
-    - django_manage_services == True
+    - django_manage_services| bool
 
 - name: restart_celery
   systemd:
@@ -18,5 +18,5 @@
     - "{{ django_celeryd_service_name }}"
     - "{{ django_celerybeat_service_name }}"
   when:
-    - django_enable_celery == True
-    - django_manage_services == True
+    - django_enable_celery| bool
+    - django_manage_services| bool

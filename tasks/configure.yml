@@ -5,7 +5,11 @@
     app_path: "{{ django_checkout_path }}"
     virtualenv: "{{ django_venv_path }}"
   with_items: "{{ django_init_commands }}"
+  become: true
   become_user: "{{ django_system_user }}"
+  when:
+    - django_init_commands is defined
+    - django_init_commands is not none
 
 - name: Make sure the static folder exists
   file:
@@ -13,7 +17,7 @@
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    mode: 0755
+    mode: "0755"
   when:
     - django_static_path is defined
     - django_static_path is not none
@@ -34,10 +38,11 @@
     src: "{{ django_checkout_path }}"
     dest: "{{ django_codebase_path }}"
     state: link
-    force: yes
+    force: true
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
-    follow: no
+    follow: false
+  become: true
   become_user: "{{ django_system_user }}"
   notify:
     - restart_service
@@ -47,7 +52,7 @@
   template:
     src: uwsgi.ini.j2
     dest: "{{ django_checkout_path }}/uwsgi.ini"
-    mode: 0644
+    mode: "0644"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
@@ -59,4 +64,4 @@
     dest: "/etc/logrotate.d/{{ django_service_name }}"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
