@@ -54,6 +54,10 @@ django_recreate_virtual_env: false
 ## pipenv
 django_use_pipenv: false
 
+## dependency pip packages
+## packages you'd want to install before install packages in the requirement's file
+django_dependency_pip_packages: []
+
 ## pip
 django_use_regular_old_pip: true
 django_pip_paths:

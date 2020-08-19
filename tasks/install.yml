@@ -111,6 +111,15 @@
     name: pip
     state: present
 
+- name: Install dependency Python packages using pip
+  pip:
+    name: "{{ django_dependency_pip_packages }}"
+    state: present
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+  become: true
+  become_user: "{{ django_system_user }}"
+
 - name: Install Python packages using pip
   pip:
     state: present
