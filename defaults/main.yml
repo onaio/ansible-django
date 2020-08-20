@@ -67,6 +67,7 @@ django_pip_paths:
 django_pip_packages:
   - celery
   - uwsgi
+django_pip_packages_extra_args:
 
 # Django
 django_local_settings_path:

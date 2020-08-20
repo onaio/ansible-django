@@ -163,6 +163,7 @@
     state: present
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
+    extra_args: "{{ django_pip_packages_extra_args }}"
   become: true
   become_user: "{{ django_system_user }}"
 
