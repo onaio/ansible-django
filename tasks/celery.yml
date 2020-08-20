@@ -16,19 +16,19 @@
   template:
     src: templates/etc/default/celeryd.j2
     dest: /etc/default/celeryd-{{ django_system_user }}
-    mode: 0644
+    mode: "0644"
 
 - name: Copy celerybeat default script
   template:
     src: templates/etc/default/celerybeat.j2
     dest: /etc/default/celerybeat-{{ django_system_user }}
-    mode: 0644
+    mode: "0644"
 
 - name: Copy celeryd upstart script
   template:
     src: "etc/systemd/celeryd.service.j2"
     dest: "/etc/systemd/system/{{ django_celeryd_service_name }}.service"
-    mode: 0644
+    mode: "0644"
   notify:
     - restart_celery
 
@@ -36,6 +36,6 @@
   template:
     src: "etc/systemd/celerybeat.service.j2"
     dest: "/etc/systemd/system/{{ django_celerybeat_service_name }}.service"
-    mode: 0644
+    mode: "0644"
   notify:
     - restart_celery

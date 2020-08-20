@@ -3,7 +3,7 @@
   template:
     src: "etc/default/django_service_name.j2"
     dest: "/etc/default/{{ django_service_name }}"
-    mode: 0640
+    mode: "0640"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
@@ -13,7 +13,7 @@
   template:
     src: "etc/systemd/django.service.j2"
     dest: /etc/systemd/system/{{ item }}
-    mode: 0644
+    mode: "0644"
   notify:
     - restart_service
   with_items:
