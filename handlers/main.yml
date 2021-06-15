@@ -1,4 +1,10 @@
 ---
+- shell: systemctl status onadata
+  register: result
+
+- debug:
+   msg: "Status result: {{ result }}"
+
 - name: restart_service
   systemd:
     name: "{{ django_service_name }}"
