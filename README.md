@@ -1,6 +1,6 @@
 # ansible-django #
 
-[![Build Status](http://cicd.onalabs.org/api/badges/onaio/ansible-django/status.svg)](http://cicd.onalabs.org/onaio/ansible-django)
+[![Build Status](https://github.com/onaio/ansible-django/workflows/CI/badge.svg)](https://github.com/onaio/ansible-django/actions?query=workflow%3ACI)
 
 Use this role to install, configure, and manage [Django](https://www.djangoproject.com/).
 
