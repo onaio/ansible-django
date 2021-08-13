@@ -63,6 +63,9 @@ django_use_regular_old_pip: true
 django_pip_paths:
   - "{{ django_checkout_path }}/requirements.txt"
 
+## poetry
+django_use_poetry: false
+
 ## other pip packages not in requirements files
 django_pip_packages:
   - celery
