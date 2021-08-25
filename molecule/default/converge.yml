@@ -18,6 +18,7 @@
       django_use_regular_old_pip: false
       django_manage_services: true
       django_enable_celery: true
+      django_use_poetry: false
       django_local_settings_path: "{{ django_checkout_path }}/kaznet/settings/local_settings.py"
       django_settings_module: "kaznet.settings.local_settings"
       django_wsgi_module: "kaznet.wsgi:application"
