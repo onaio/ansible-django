@@ -50,6 +50,7 @@ django_celerybeat_extra_env_vars: []
 # Python packages
 django_apt_python_ppa:
 django_recreate_virtual_env: false
+django_setuptools_version:
 
 ## pipenv
 django_use_pipenv: false
