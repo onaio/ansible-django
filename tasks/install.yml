@@ -111,6 +111,17 @@
     name: pip
     state: present
 
+- name: Upgrade setuptools to desired version
+  pip:
+    name: setuptools
+    version: "{{ django_setuptools_version }}"
+    state: present
+    virtualenv: "{{ django_venv_path }}"
+    virtualenv_python: "{{ django_python_version }}"
+  become: true
+  become_user: "{{ django_system_user }}"
+  when: django_setuptools_version is defined and django_setuptools_version
+
 - name: Install dependency Python packages using pip
   pip:
     name: "{{ django_dependency_pip_packages }}"
