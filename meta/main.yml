@@ -14,7 +14,7 @@ dependencies:
  - role: DavisRayM.python
    src: https://github.com/DavisRayM/python.git
    scm: git
-   version: 069924bc388d428141eb531e7293bcea0238e6da
+   version: ce76dec6e07e2ad83fabf05f2bc7916768ba4cf5
    become: true
    become_user: "root"
    python_source_version: "{{ django_python_source_version }}"
