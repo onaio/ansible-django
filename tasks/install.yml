@@ -207,6 +207,8 @@
   args:
     chdir: "{{ django_checkout_path }}"
     executable: /bin/bash
+  environment:
+    PIPENV_VERBOSITY: -1
   when:
     - django_use_pipenv| bool
 
