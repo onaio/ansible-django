@@ -108,8 +108,11 @@
 
 - name: Upgrade pip to latest version
   pip:
-    name: pip
+    name: "{{ item }}"
     state: present
+  with_items:
+    - pip
+    - virtualenv
 
 - name: Upgrade setuptools to desired version
   pip:
