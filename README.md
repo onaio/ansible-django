@@ -20,8 +20,15 @@ Some of the more important variables are briefly described below.  You can see a
 ```yml
 django_system_user: "django_app"  # name of the user that will own the django installation
 
-django_python_source_version: "3.6"  # the python verion to user
-django_python_version: "python3.6"  # the python version to use with pip commands
+django_python_apt_ppa: "ppa:deadsnakes/ppa" # The repository used to install python
+django_python_version: "python3.8"  # the python version to use with pip commands
+django_python_packages: # the python packages that would be required
+  - "{{ django_python_version }}"
+  - "{{ django_python_version }}-dev"
+  - python3-pip
+  - python3-distutils
+  - python3-setuptools
+django_pip_executable: "pip3" # Executable to use when running pip commands
 
 django_git_url: "https://github.com/moshthepitt/django-template3.git"  # the git repo of your django app which we are installing
 
@@ -78,16 +85,6 @@ django_settings:
           'PORT': '5432',
       }
     }
-```
-
-## Role Dependencies ##
-
-* DavisRayM.python
-
-You can install these by running the following ansible command:
-
-```sh
-ansible-galaxy install -r requirements.yml
 ```
 
 ## Testing ##

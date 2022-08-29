@@ -28,8 +28,6 @@
     django_git_url: "https://github.com/onaio/kaznet-web"
     django_git_version: "v1.1.8"
     django_celery_app: "kaznet"
-    django_python_source_version: "3.6"
-    django_python_version: "python3.6"
     django_use_pipenv: true
     django_use_regular_old_pip: false
     django_manage_services: true
