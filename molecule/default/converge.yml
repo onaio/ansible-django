@@ -9,17 +9,42 @@
       django_codebase_path: "{{ django_system_user_home }}/app"
       django_versioned_path: "{{ django_codebase_path }}-versioned"
       django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
-      django_git_url: "https://github.com/onaio/kaznet-web"
-      django_git_version: "v1.1.8"
-      django_celery_app: "kaznet"
-      django_use_pipenv: true
-      django_use_regular_old_pip: false
-      django_manage_services: true
+      django_git_url: "https://github.com/onaio/onadata"
+      django_system_wide_dependencies:
+        - binutils
+        - libproj-dev
+        - gdal-bin
+        - memcached
+        - libmemcached-dev
+        - build-essential
+        - git
+        - libssl-dev
+        - libpq-dev
+        - gfortran
+        - libatlas-base-dev
+        - libjpeg-dev
+        - libxml2-dev
+        - libxslt1-dev
+        - zlib1g-dev
+        - software-properties-common
+        - ghostscript
+        - python3-celery
+        - python3-sphinx
+        - pkg-config
+        - gcc
+        - automake
+        - libtool
+      django_pip_paths:
+        - "{{ django_checkout_path }}/requirements/base.pip"
+      django_git_version: "main"
+      django_celery_app: "django_example_app"
+      django_use_pipenv: false
+      django_use_regular_old_pip: true
       django_enable_celery: true
       django_use_poetry: false
-      django_local_settings_path: "{{ django_checkout_path }}/kaznet/settings/local_settings.py"
-      django_settings_module: "kaznet.settings.local_settings"
-      django_wsgi_module: "kaznet.wsgi:application"
+      django_local_settings_path: "{{ django_checkout_path }}/mysite/settings/local_settings.py"
+      django_settings_module: "mysite.settings.local_settings"
+      django_wsgi_module: "mysite.wsgi:application"
       django_init_commands:
       django_top_python_statements:
         - import os

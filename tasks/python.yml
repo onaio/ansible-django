@@ -27,3 +27,4 @@
     name: "virtualenv"
     state: present
     executable: "{{ django_pip_executable }}"
+  when: django_install_virtualenv
