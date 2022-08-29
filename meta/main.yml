@@ -9,18 +9,3 @@ galaxy_info:
   - name: Ubuntu
     versions:
       - all
-
-dependencies:
- - role: DavisRayM.python
-   src: https://github.com/DavisRayM/python.git
-   scm: git
-   version: 5ec99badd469d1bc511b3d215e0a8c9682952eff
-   become: true
-   become_user: "root"
-   python_source_version: "{{ django_python_source_version }}"
-   python_packages: "{{ django_python_packages }}"
-   python_apt_ppa: "{{ django_apt_python_ppa }}"
-  #  python_setuptools_version: "{{ django_setuptools_version }}"
-   python_virtualenv_version: "{{ django_python_virtualenv_version }}"
-   tags:
-    - python
