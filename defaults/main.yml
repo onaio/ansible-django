@@ -6,11 +6,12 @@ django_system_user_home: "/home/{{ django_system_user }}"
 # python
 django_python_apt_ppa: "ppa:deadsnakes/ppa"
 django_python_packages:
-  - python3.8
-  - python3.8-dev
+  - "{{ django_python_version }}"
+  - "{{ django_python_version }}-dev"
   - python3-pip
   - python3-distutils
   - python3-setuptools
+django_python_version: "python3.8"
 django_pip_executable: "pip3"
 
 # git
