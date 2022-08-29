@@ -201,7 +201,7 @@
     - django_use_poetry| bool
 
 - name: Install Python packages using pipenv
-  shell: source {{ django_venv_path }}/bin/activate && export PIPENV_VERBOSITY=-1 && pipenv sync --python {{ django_python_source_version }}
+  shell: source {{ django_venv_path }}/bin/activate && export PIPENV_VERBOSITY=-1 && pipenv sync --python {{ django_python_version }}
   become: true
   become_user: "{{ django_system_user }}"
   args:
