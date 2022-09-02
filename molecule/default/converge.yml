@@ -6,6 +6,7 @@
       django_system_user: "django_example_app"
       django_system_user_home: "/home/{{ django_system_user }}"
       django_recreate_virtual_env: false
+      django_manage_services: true
       django_codebase_path: "{{ django_system_user_home }}/app"
       django_versioned_path: "{{ django_codebase_path }}-versioned"
       django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"

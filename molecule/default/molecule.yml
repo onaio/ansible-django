@@ -16,6 +16,8 @@ platforms:
     image: geerlingguy/docker-ubuntu2004-ansible:latest
     privileged: true
     command: /sbin/init
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     env:
       LC_ALL: "C.UTF-8"
       LANG: "C.UTF-8"
