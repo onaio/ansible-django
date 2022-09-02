@@ -38,7 +38,7 @@
       django_pip_paths:
         - "{{ django_checkout_path }}/requirements/base.pip"
       django_git_version: "main"
-      django_celery_app: "onadata.celery"
+      django_celery_app: "onadata.celeryapp"
       django_use_pipenv: false
       django_use_regular_old_pip: true
       django_enable_celery: true
