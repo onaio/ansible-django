@@ -38,14 +38,14 @@
       django_pip_paths:
         - "{{ django_checkout_path }}/requirements/base.pip"
       django_git_version: "main"
-      django_celery_app: "django_example_app"
+      django_celery_app: "onadata.celery"
       django_use_pipenv: false
       django_use_regular_old_pip: true
       django_enable_celery: true
       django_use_poetry: false
       django_local_settings_path: "{{ django_checkout_path }}/mysite/settings/local_settings.py"
-      django_settings_module: "mysite.settings.local_settings"
-      django_wsgi_module: "mysite.wsgi:application"
+      django_settings_module: "onadata.settings.local_settings"
+      django_wsgi_module: "onadata.devwsgi:application"
       django_init_commands:
       django_top_python_statements:
         - import os
