@@ -44,7 +44,7 @@
       django_enable_celery: true
       django_use_poetry: false
       django_local_settings_path: "{{ django_checkout_path }}/mysite/settings/local_settings.py"
-      django_settings_module: "onadata.settings.local_settings"
+      django_settings_module: "onadata.settings.default_settings"
       django_wsgi_module: "onadata.devwsgi:application"
       django_init_commands:
       django_top_python_statements:
