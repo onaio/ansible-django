@@ -12,6 +12,24 @@ platforms:
     env:
       LC_ALL: "C.UTF-8"
       LANG: "C.UTF-8"
+  - name: ansible-django-ubuntu-20.04
+    image: geerlingguy/docker-ubuntu2004-ansible:latest
+    privileged: true
+    command: /sbin/init
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    env:
+      LC_ALL: "C.UTF-8"
+      LANG: "C.UTF-8"
+  - name: ansible-django-ubuntu-22.04
+    image: geerlingguy/docker-ubuntu2204-ansible:latest
+    privileged: true
+    command: /sbin/init
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    env:
+      LC_ALL: "C.UTF-8"
+      LANG: "C.UTF-8"
 provisioner:
   name: ansible
 scenario:

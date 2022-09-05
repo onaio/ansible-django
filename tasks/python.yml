@@ -1,0 +1,30 @@
+---
+- name: Ensure `GnuPG` is installed
+  apt:
+    name: gnupg
+    state: present
+    update_cache: "yes"
+  become: true
+  become_user: root
+
+- name: Add deadsnakes PPA
+  apt_repository:
+    repo: "{{ django_python_apt_ppa }}"
+    state: present
+  become: true
+  become_user: root
+
+- name: Install python packages
+  apt:
+    name: "{{ django_python_packages }}"
+    state: present
+    update_cache: "yes"
+  become: true
+  become_user: root
+
+- name: Install virtualenv
+  pip:
+    name: "virtualenv"
+    state: present
+    executable: "{{ django_pip_executable }}"
+  when: django_install_virtualenv

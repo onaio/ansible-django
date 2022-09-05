@@ -1,4 +1,10 @@
 ---
+- name: Install python
+  include_tasks: python.yml
+  tags:
+    - python
+    - install
+
 - name: Install django
   include_tasks: install.yml
   tags:
