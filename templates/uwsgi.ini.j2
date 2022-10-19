@@ -24,6 +24,9 @@ buffer-size={{ django_wsgi_buffer_size }}
 {% if django_wsgi_env %}
 env={{ django_wsgi_env }}
 {% endif %}
+{% for item, value in django_wsgi_env_variables.items() %}
+env={{ item }}={{ value }}
+{% endfor %}
 stats={{ django_wsgi_stats }}
 {% if django_wsgi_enable_threads %}
 enable-threads

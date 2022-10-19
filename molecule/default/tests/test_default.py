@@ -26,3 +26,7 @@ def test_django_service(host):
     celerybeat_django_app = host.service("celerybeat-django_example_app")
     assert celeryd_django_app.is_running
     assert celeryd_django_app.is_enabled
+
+def test_django_wsgi_file(host):
+    content = host.file('/home/django_example_app/app/uwsgi.ini').content_string
+    assert "env=SOME_ENV=Some value" in content

@@ -148,6 +148,8 @@ django_wsgi_env: "HTTPS=on"
 django_wsgi_stats: "{{ django_pid_socks_dir }}/{{ django_service_name }}_stats.sock"
 django_wsgi_enable_threads: false
 django_wsgi_memory_report: false
+django_wsgi_env_variables:
+  # SOME_ENV: "some value"
 
 # celery
 django_enable_celery: true
