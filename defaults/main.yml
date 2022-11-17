@@ -129,6 +129,12 @@ django_top_python_statements:
 django_bottom_python_statements:
 
 # wsgi
+django_wsgi_use_cheaper: false
+django_wsgi_cheaper_algo: "spare"
+django_wsgi_cheaper_min_workers: 3
+django_wsgi_cheaper_max_workers: 10
+django_wsgi_cheaper_spawn_rate: 1
+django_wsgi_cheaper_overload: 30
 django_wsgi_module:
 django_wsgi_processes: 3
 django_wsgi_harakiri: 240
