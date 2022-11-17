@@ -17,6 +17,19 @@ harakiri={{ django_wsgi_harakiri }}            # respawn processes taking more t
 max-requests={{ django_wsgi_max_requests }}    # respawn processes after serving 5000 requests
 logto={{ django_wsgi_logto }}
 virtualenv={{ django_wsgi_virtualenv }}
+{% if django_wsgi_use_cheaper %}
+# set cheaper algorithm to use, if not set default will be used
+cheaper-algo={{ django_wsgi_cheaper_algo }}
+# minimum number of workers to keep at all times
+cheaper={{ django_wsgi_cheaper_min_workers }}
+# number of workers to spawn at startup
+cheaper-initial={{ django_wsgi_cheaper_min_workers }}
+# maximum number of workers that can be spawned
+workers={{ django_wsgi_cheaper_max_workers }}
+# how many workers should be spawned at a time
+cheaper-step={{ django_wsgi_cheaper_spawn_rate }}
+cheaper-overload={{ django_wsgi_cheaper_overload }}
+{% endif %}
 {% if django_wsgi_static_map %}
 static-map={{ django_wsgi_static_map }}
 {% endif %}
