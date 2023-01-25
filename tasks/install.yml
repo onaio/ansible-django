@@ -168,7 +168,7 @@
     - django_use_poetry| bool
 
 - name: Install Poetry
-  command: "{{ django_python_version }} /tmp/install-poetry.py"
+  command: "{{ django_python_version }} /tmp/install-poetry.py  --version 1.1.15"
   become: true
   become_user: "{{ django_system_user }}"
   environment:
