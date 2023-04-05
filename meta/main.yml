@@ -1,5 +1,6 @@
 galaxy_info:
   role_name: django
+  namespace: onaio
   author: Ona Engineering
   company: Ona Systems Inc
   license: Apache-2.0
