@@ -32,23 +32,5 @@ platforms:
       LANG: "C.UTF-8"
 provisioner:
   name: ansible
-scenario:
-  name: default
-  test_sequence:
-    - lint
-    - destroy
-    - dependency
-    - syntax
-    - create
-    - prepare
-    - converge
-    # - idempotence
-    - side_effect
-    - verify
-    - destroy
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
 verifier:
   name: testinfra
