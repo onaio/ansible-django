@@ -37,6 +37,8 @@
         - libtool
       django_pip_paths:
         - "{{ django_checkout_path }}/requirements/base.pip"
+      django_wsgi_extra_configurations:
+        - "ignore-sigpipe = true"
       django_git_version: "main"
       django_celery_app: "onadata.celeryapp"
       django_use_pipenv: false

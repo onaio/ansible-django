@@ -30,3 +30,7 @@ def test_django_service(host):
 def test_django_wsgi_file(host):
     content = host.file('/home/django_example_app/app/uwsgi.ini').content_string
     assert "env=SOME_ENV=Some value" in content
+
+def test_uwsgi_config(host):
+    uwsgi_settings = host.file("/home/django_example_app/app/uwsgi.ini")
+    assert uwsgi_settings.contains("ignore-sigpipe = true")
