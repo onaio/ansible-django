@@ -53,3 +53,5 @@
       django_bottom_python_statements:
         - test_var = Decimal(16)
         - SECRET_KEY = "secret"
+      django_wsgi_env_variables:
+        SOME_ENV: "Some value"
