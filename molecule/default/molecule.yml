@@ -16,5 +16,17 @@ platforms:
       LANG: "C.UTF-8"
 provisioner:
   name: ansible
+scenario:
+  name: default
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - cleanup
+    - destroy
 verifier:
   name: testinfra
