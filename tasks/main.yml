@@ -1,32 +1,32 @@
 ---
 - name: Install python
-  include_tasks: python.yml
+  ansible.builtin.include_tasks: python.yml
   tags:
     - python
     - install
 
 - name: Install django
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
   tags:
     - install
 
 - name: Configure django
-  include_tasks: configure.yml
+  ansible.builtin.include_tasks: configure.yml
   tags:
     - config
 
 - name: Setup services
-  include_tasks: service.yml
+  ansible.builtin.include_tasks: service.yml
   tags:
     - setup
 
 - name: Install celery
-  include_tasks: celery.yml
+  ansible.builtin.include_tasks: celery.yml
   when: django_enable_celery| bool
   tags:
     - celery
 
 - name: Cleanup
-  include_tasks: cleanup.yml
+  ansible.builtin.include_tasks: cleanup.yml
   tags:
     - cleanup

@@ -1,10 +1,11 @@
 ---
 - name: Ensure celery pid directories are present
-  file:
+  ansible.builtin.file:
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     path: "{{ item }}"
+    mode: "0644"
   when:
     - item is defined
     - item is not none
@@ -13,19 +14,19 @@
     - "{{ django_celery_beat_pid_directory }}"
 
 - name: Copy celeryd default script
-  template:
+  ansible.builtin.template:
     src: templates/etc/default/celeryd.j2
     dest: /etc/default/celeryd-{{ django_system_user }}
     mode: "0644"
 
 - name: Copy celerybeat default script
-  template:
+  ansible.builtin.template:
     src: templates/etc/default/celerybeat.j2
     dest: /etc/default/celerybeat-{{ django_system_user }}
     mode: "0644"
 
 - name: Copy celeryd upstart script
-  template:
+  ansible.builtin.template:
     src: "etc/systemd/celeryd.service.j2"
     dest: "/etc/systemd/system/{{ django_celeryd_service_name }}.service"
     mode: "0644"
@@ -33,7 +34,7 @@
     - restart_celery
 
 - name: Copy celerybeat upstart script
-  template:
+  ansible.builtin.template:
     src: "etc/systemd/celerybeat.service.j2"
     dest: "/etc/systemd/system/{{ django_celerybeat_service_name }}.service"
     mode: "0644"

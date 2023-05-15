@@ -1,6 +1,6 @@
 ---
-- name: restart_service
-  systemd:
+- name: Restart Django Service
+  ansible.builtin.systemd:
     name: "{{ django_service_name }}"
     state: restarted
     enabled: true
@@ -8,8 +8,8 @@
   when:
     - django_manage_services| bool
 
-- name: restart_celery
-  systemd:
+- name: Restart Celery Service
+  ansible.builtin.systemd:
     name: "{{ item }}"
     state: restarted
     enabled: true

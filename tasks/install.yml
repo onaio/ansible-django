@@ -1,10 +1,10 @@
 - name: Add system group
-  group:
+  ansible.builtin.group:
     name: "{{ django_system_group }}"
     state: present
 
 - name: Add system user
-  user:
+  ansible.builtin.user:
     name: "{{ django_system_user }}"
     shell: /bin/bash
     group: "{{ django_system_group }}"
@@ -12,18 +12,18 @@
     createhome: true
 
 - name: Update apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: "yes"
 
 - name: Install system-wide dependencies
-  apt:
+  ansible.builtin.apt:
     name: "{{ django_system_wide_dependencies }}"
     state: present
     update_cache: true
     cache_valid_time: 600
 
 - name: Delete virtualenv
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ item }}"
   with_items:
@@ -31,11 +31,12 @@
   when: django_recreate_virtual_env
 
 - name: Ensure required directories are present
-  file:
+  ansible.builtin.file:
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     path: "{{ item }}"
+    mode: "0755"
   when:
     - item is defined
     - item is not none
@@ -47,7 +48,7 @@
     - "{{ django_system_user_home }}/.ssh"
 
 - name: Copy git key from string
-  copy:
+  ansible.builtin.copy:
     content: "{{ django_git_key_content }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
@@ -58,7 +59,7 @@
     - django_git_key_content is not none
 
 - name: Copy git key from file
-  copy:
+  ansible.builtin.copy:
     src: "{{ django_git_key_ssh_file }}"
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
@@ -69,7 +70,7 @@
     - django_git_key_ssh_file is not none
 
 - name: Git clone with key
-  git:
+  ansible.builtin.git:
     accept_hostkey: "yes"
     repo: "{{ django_git_url }}"
     dest: "{{ django_checkout_path }}"
@@ -84,7 +85,7 @@
     - django_git_key_content is not none or django_git_key_ssh_file is not none
 
 - name: Ensure Github is in the known hosts file
-  known_hosts:
+  ansible.builtin.known_hosts:
     path: "{{ django_system_user_home }}/.ssh/known_hosts"
     name: github.com
     key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
@@ -93,7 +94,7 @@
     - django_git_key_content is not none or django_git_key_ssh_file is not none
 
 - name: Git clone without key
-  git:
+  ansible.builtin.git:
     accept_hostkey: "yes"
     repo: "{{ django_git_url }}"
     dest: "{{ django_checkout_path }}"
@@ -107,12 +108,12 @@
     - django_git_key_ssh_file is not defined or django_git_key_ssh_file is none
 
 - name: Upgrade pip to latest version
-  pip:
+  ansible.builtin.pip:
     name: pip
     state: present
 
 - name: Upgrade setuptools to desired version
-  pip:
+  ansible.builtin.pip:
     name: setuptools
     version: "{{ django_setuptools_version }}"
     state: present
@@ -123,7 +124,7 @@
   when: django_setuptools_version is defined and django_setuptools_version
 
 - name: Install dependency Python packages using pip
-  pip:
+  ansible.builtin.pip:
     name: "{{ django_dependency_pip_packages }}"
     state: present
     virtualenv: "{{ django_venv_path }}"
@@ -132,7 +133,7 @@
   become_user: "{{ django_system_user }}"
 
 - name: Install Python packages using pip
-  pip:
+  ansible.builtin.pip:
     state: present
     requirements: "{{ item }}"
     virtualenv: "{{ django_venv_path }}"
@@ -146,7 +147,7 @@
     - django_use_regular_old_pip| bool
 
 - name: Install pipenv
-  pip:
+  ansible.builtin.pip:
     name: pipenv
     state: present
     virtualenv: "{{ django_venv_path }}"
@@ -159,16 +160,19 @@
     - django_use_pipenv| bool
 
 - name: Download Poetry
-  get_url:
+  ansible.builtin.get_url:
     url: "https://install.python-poetry.org"
     dest: /tmp/install-poetry.py
+    mode: "0644"
   become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_use_poetry| bool
 
 - name: Install Poetry
-  command: "{{ django_python_version }} /tmp/install-poetry.py"
+  ansible.builtin.command:
+    cmd: "{{ django_python_version }} /tmp/install-poetry.py"
+    creates: /tmp/install-poetry.py
   become: true
   become_user: "{{ django_system_user }}"
   environment:
@@ -177,21 +181,24 @@
     - django_use_poetry| bool
 
 - name: Disable poetry virtualenv
-  command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.create false"
+  ansible.builtin.command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.create false"
+  changed_when: true
   become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_use_poetry| bool
 
 - name: Set poetry virtualenv
-  command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.path {{ django_system_user_home }}/.virtualenvs/"
+  ansible.builtin.command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.path {{ django_system_user_home }}/.virtualenvs/"
+  changed_when: true
   become: true
   become_user: "{{ django_system_user }}"
   when:
     - django_use_poetry| bool
 
 - name: Install requriements via poetry
-  shell: source {{ django_venv_path }}/bin/activate && {{ django_system_user_home }}/.local/bin/poetry install
+  ansible.builtin.shell: source {{ django_venv_path }}/bin/activate && {{ django_system_user_home }}/.local/bin/poetry install
+  changed_when: true
   become: true
   become_user: "{{ django_system_user }}"
   args:
@@ -201,19 +208,20 @@
     - django_use_poetry| bool
 
 - name: Install Python packages using pipenv
-  shell: source {{ django_venv_path }}/bin/activate && export PIPENV_VERBOSITY=-1 && pipenv sync --python {{ django_python_version }}
-  become: true
-  become_user: "{{ django_system_user }}"
+  ansible.builtin.shell: source {{ django_venv_path }}/bin/activate && pipenv sync --python {{ django_python_version }}
+  changed_when: true
   args:
     chdir: "{{ django_checkout_path }}"
     executable: /bin/bash
   environment:
-    PIPENV_VERBOSITY: -1
+    PIPENV_VERBOSITY: "-1"
+  become: true
+  become_user: "{{ django_system_user }}"
   when:
     - django_use_pipenv| bool
 
 - name: Install other python packages using pip
-  pip:
+  ansible.builtin.pip:
     name: "{{ django_pip_packages }}"
     state: present
     virtualenv: "{{ django_venv_path }}"
@@ -225,7 +233,7 @@
 - name: Install packages from Github
   become: true
   become_user: "{{ django_system_user }}"
-  pip:
+  ansible.builtin.pip:
     name: "{{ item }}"
     virtualenv: "{{ django_venv_path }}"
     virtualenv_python: "{{ django_python_version }}"
@@ -234,7 +242,7 @@
   when: django_optional_git_packages is defined and django_use_regular_old_pip
 
 - name: Remove Git Key
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
   become: true
@@ -245,7 +253,7 @@
     - django_remove_git_key| bool
 
 - name: Make sure the local settings directory is present
-  file:
+  ansible.builtin.file:
     path: "{{ django_local_settings_path | dirname }}"
     state: directory
     owner: "{{ django_system_user }}"
@@ -253,7 +261,7 @@
     mode: "0750"
 
 - name: Copy local settings from template
-  template:
+  ansible.builtin.template:
     src: "{{ django_settings_template_path }}"
     dest: "{{ django_local_settings_path }}"
     owner: "{{ django_system_user }}"
@@ -261,7 +269,7 @@
     mode: "0644"
 
 - name: Copy the environment script
-  template:
+  ansible.builtin.template:
     src: "django_checkout_path/django_environment_script_name.j2"
     dest: "{{ django_checkout_path }}/{{ django_environment_script_name }}"
     owner: "{{ django_system_user }}"

@@ -6,8 +6,7 @@
     - skip_ansible_lint
 
 - name: Remove extra files from app directroy
-  file:
-    path: "{{ django_versioned_path }}/{{ versioned_list.stdout_lines[item|int] }}"
+  ansible.builtin.file:
+    path: "{{ django_versioned_path }}/{{ versioned_list.stdout_lines[item | int] }}"
     state: absent
-  with_sequence: start=0 end={{ versioned_list.stdout_lines|length - 10 }}
-  ignore_errors: true
+  with_sequence: start=0 end={{ versioned_list.stdout_lines | length - 10 }}
