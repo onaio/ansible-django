@@ -34,3 +34,10 @@ def test_django_wsgi_file(host):
 def test_uwsgi_config(host):
     uwsgi_settings = host.file("/home/django_example_app/app/uwsgi.ini")
     assert uwsgi_settings.contains("ignore-sigpipe = true")
+
+def test_local_settings(host):
+    local_settings = host.file("/home/django_example_app/app/mysite/settings/local_settings.py")
+    assert local_settings.contains("MEDIA_ROOT = '/var/www/media/'")
+    assert local_settings.user == "django_example_app"
+    assert local_settings.group == "www-data"
+    assert local_settings.mode == 0o644
