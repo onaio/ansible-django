@@ -7,7 +7,7 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
-    - restart_service
+    - Restart Django Service
 
 - name: Copy upstart scripts
   ansible.builtin.template:
@@ -15,6 +15,6 @@
     dest: /etc/systemd/system/{{ item }}
     mode: "0644"
   notify:
-    - restart_service
+    - Restart Django Service
   with_items:
     - "{{ django_service_name }}.service"

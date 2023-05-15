@@ -45,8 +45,8 @@
   become: true
   become_user: "{{ django_system_user }}"
   notify:
-    - restart_service
-    - restart_celery
+    - Restart Django Service
+    - Restart Celery Service
 
 - name: Copy uwsgi.ini
   ansible.builtin.template:
@@ -56,7 +56,7 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
-    - restart_service
+    - Restart Django Service
 
 - name: Customize logrotate rules
   ansible.builtin.template:

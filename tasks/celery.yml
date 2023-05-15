@@ -31,7 +31,7 @@
     dest: "/etc/systemd/system/{{ django_celeryd_service_name }}.service"
     mode: "0644"
   notify:
-    - restart_celery
+    - Restart Celery Service
 
 - name: Copy celerybeat upstart script
   ansible.builtin.template:
@@ -39,4 +39,4 @@
     dest: "/etc/systemd/system/{{ django_celerybeat_service_name }}.service"
     mode: "0644"
   notify:
-    - restart_celery
+    - Restart Celery Service
