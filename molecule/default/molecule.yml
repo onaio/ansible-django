@@ -4,29 +4,13 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: ansible-django-ubuntu-18.04
-    image: solita/ubuntu-systemd:18.04
-    dockerfile: Dockerfile.j2
-    privileged: true
-    command: /sbin/init
-    env:
-      LC_ALL: "C.UTF-8"
-      LANG: "C.UTF-8"
-  - name: ansible-django-ubuntu-20.04
-    image: geerlingguy/docker-ubuntu2004-ansible:latest
+  - name: instance
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest
     privileged: true
     command: /sbin/init
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    env:
-      LC_ALL: "C.UTF-8"
-      LANG: "C.UTF-8"
-  - name: ansible-django-ubuntu-22.04
-    image: geerlingguy/docker-ubuntu2204-ansible:latest
-    privileged: true
-    command: /sbin/init
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
     env:
       LC_ALL: "C.UTF-8"
       LANG: "C.UTF-8"
@@ -35,20 +19,15 @@ provisioner:
 scenario:
   name: default
   test_sequence:
-    - lint
-    - destroy
     - dependency
+    - cleanup
+    - destroy
     - syntax
     - create
     - prepare
     - converge
-    # - idempotence
-    - side_effect
     - verify
+    - cleanup
     - destroy
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
 verifier:
   name: testinfra

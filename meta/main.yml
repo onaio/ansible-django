@@ -1,10 +1,11 @@
 galaxy_info:
   role_name: django
+  namespace: onaio
   author: Ona Engineering
   company: Ona Systems Inc
   license: Apache-2.0
   description: Install and configure Django
-  min_ansible_version: 2.6
+  min_ansible_version: "2.6"
   platforms:
   - name: Ubuntu
     versions:

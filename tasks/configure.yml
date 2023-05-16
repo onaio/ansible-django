@@ -12,7 +12,7 @@
     - django_init_commands is not none
 
 - name: Make sure the static folder exists
-  file:
+  ansible.builtin.file:
     path: "{{ django_static_path }}"
     state: directory
     owner: "{{ django_system_user }}"
@@ -23,7 +23,7 @@
     - django_static_path is not none
 
 - name: Make sure the mediafolder exists
-  file:
+  ansible.builtin.file:
     path: "{{ django_media_path }}"
     state: directory
     owner: "{{ django_system_user }}"
@@ -34,7 +34,7 @@
     - django_media_path is not none
 
 - name: Make the new codebase current
-  file:
+  ansible.builtin.file:
     src: "{{ django_checkout_path }}"
     dest: "{{ django_codebase_path }}"
     state: link
@@ -45,21 +45,21 @@
   become: true
   become_user: "{{ django_system_user }}"
   notify:
-    - restart_service
-    - restart_celery
+    - Restart Django Service
+    - Restart Celery Service
 
 - name: Copy uwsgi.ini
-  template:
+  ansible.builtin.template:
     src: uwsgi.ini.j2
     dest: "{{ django_checkout_path }}/uwsgi.ini"
     mode: "0644"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
   notify:
-    - restart_service
+    - Restart Django Service
 
-- name: customize logrotate rules
-  template:
+- name: Customize logrotate rules
+  ansible.builtin.template:
     src: etc/logrotate.d/django.j2
     dest: "/etc/logrotate.d/{{ django_service_name }}"
     owner: root

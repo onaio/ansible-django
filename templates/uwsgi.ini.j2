@@ -47,3 +47,8 @@ enable-threads
 {% if django_wsgi_memory_report %}
 memory-report
 {% endif %}
+{% if django_wsgi_extra_configurations is defined %}
+{% for config in django_wsgi_extra_configurations %}
+{{ config }}
+{% endfor %}
+{% endif %}
