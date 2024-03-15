@@ -111,6 +111,7 @@
   ansible.builtin.pip:
     name: pip
     state: present
+    executable: pip3
 
 - name: Upgrade setuptools to desired version
   ansible.builtin.pip:

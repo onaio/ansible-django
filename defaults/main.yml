@@ -11,7 +11,7 @@ django_python_packages:
   - "{{ django_python_version }}-distutils"
   - python3-pip
   - python3-setuptools
-django_python_version: "python3.9"
+django_python_version: "python3.10"
 django_pip_executable: "pip3"
 
 # git
