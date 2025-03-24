@@ -7,7 +7,7 @@
   ansible.builtin.user:
     name: "{{ django_system_user }}"
     shell: /bin/bash
-    group: "{{ django_system_group }}"
+    groups: "{{ django_system_group }}"
     append: true
     createhome: true
 
