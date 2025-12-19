@@ -23,8 +23,11 @@
   become_user: root
 
 - name: Install virtualenv
-  ansible.builtin.pip:
-    name: "virtualenv"
+  ansible.builtin.apt:
+    name:
+      - python3-venv
+      - python3-virtualenv
     state: present
-    executable: "{{ django_pip_executable }}"
+    update_cache: "yes"
+  become: true
   when: django_install_virtualenv
