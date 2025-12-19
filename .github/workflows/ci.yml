@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         distro:
-          - ubuntu2404
+          - ubuntu2204
     steps:
       - name: Checkout codebase
         uses: actions/checkout@v4
