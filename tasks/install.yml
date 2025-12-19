@@ -116,7 +116,7 @@
     virtualenv_python: "{{ django_python_version }}"
   become: true
   become_user: "{{ django_system_user }}"
-  when: django_setuptools_version is defined and django_setuptools_version | length > 0
+  when: django_setuptools_version is defined and django_setuptools_version is not none and django_setuptools_version | length > 0
 
 - name: Install dependency Python packages using pip
   ansible.builtin.pip:
