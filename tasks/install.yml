@@ -128,7 +128,9 @@
   become_user: "{{ django_system_user }}"
 
 - name: Install a custom pip version
-  shell: "{{ django_venv_path }}/bin/pip3 install '{{ custom_pip_version }}'"
+  ansible.builtin.pip:
+    name: "{{ custom_pip_version }}"
+    virtualenv: "{{ django_venv_path }}"
   become: true
   become_user: "{{ django_system_user }}"
   when:
