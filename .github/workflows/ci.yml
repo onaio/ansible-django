@@ -21,7 +21,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: Install dependencies
         run: pip3 install yamllint ansible-lint
@@ -47,7 +46,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: Install test dependencies
         run: pip install ansible molecule molecule-plugins[docker] pytest-testinfra docker
