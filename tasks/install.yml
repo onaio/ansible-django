@@ -126,6 +126,7 @@
     virtualenv_python: "{{ django_python_version }}"
   become: true
   become_user: "{{ django_system_user }}"
+  when: django_dependency_pip_packages | length > 0
 
 - name: Install a custom pip version
   ansible.builtin.pip:
