@@ -19,6 +19,7 @@
       failed_when: systemctl_status.rc > 1
   roles:
     - role: onaio.django
+      django_python_version: "python3.12"
       django_system_user: "django_example_app"
       django_system_user_home: "/home/{{ django_system_user }}"
       django_recreate_virtual_env: false
