@@ -8,10 +8,9 @@ django_python_apt_ppa: "ppa:deadsnakes/ppa"
 django_python_packages:
   - "{{ django_python_version }}"
   - "{{ django_python_version }}-dev"
-  - "{{ django_python_version }}-distutils"
   - python3-pip
   - python3-setuptools
-django_python_version: "python3.9"
+django_python_version: "python3.10"
 django_pip_executable: "pip3"
 
 # git
@@ -121,7 +120,7 @@ django_settings:
   EMAIL_PORT: "1025"
   DEFAULT_FROM_EMAIL: "'Hello World <hello@example.com>'"
   ALLOWED_HOSTS: "[]"
-  DEBUG: True  # yamllint disable-line rule:truthy
+  DEBUG: True # yamllint disable-line rule:truthy
 ## python statements included at the top of settings file
 django_top_python_statements:
   - import os

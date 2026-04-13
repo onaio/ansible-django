@@ -107,11 +107,6 @@
     - django_git_key_content is not defined or django_git_key_content is none
     - django_git_key_ssh_file is not defined or django_git_key_ssh_file is none
 
-- name: Upgrade pip to latest version
-  ansible.builtin.pip:
-    name: pip
-    state: present
-
 - name: Upgrade setuptools to desired version
   ansible.builtin.pip:
     name: setuptools
@@ -121,7 +116,7 @@
     virtualenv_python: "{{ django_python_version }}"
   become: true
   become_user: "{{ django_system_user }}"
-  when: django_setuptools_version is defined and django_setuptools_version
+  when: django_setuptools_version is defined and django_setuptools_version is not none and django_setuptools_version | length > 0
 
 - name: Install dependency Python packages using pip
   ansible.builtin.pip:
@@ -131,9 +126,12 @@
     virtualenv_python: "{{ django_python_version }}"
   become: true
   become_user: "{{ django_system_user }}"
+  when: django_dependency_pip_packages | length > 0
 
 - name: Install a custom pip version
-  shell: "{{ django_venv_path }}/bin/pip3 install '{{ custom_pip_version }}'"
+  ansible.builtin.pip:
+    name: "{{ custom_pip_version }}"
+    virtualenv: "{{ django_venv_path }}"
   become: true
   become_user: "{{ django_system_user }}"
   when:

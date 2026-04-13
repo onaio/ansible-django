@@ -13,6 +13,10 @@
     state: present
   become: true
   become_user: root
+  register: deadsnakes_ppa
+  retries: 3
+  delay: 10
+  until: deadsnakes_ppa is success
 
 - name: Install python packages
   ansible.builtin.apt:
@@ -23,8 +27,9 @@
   become_user: root
 
 - name: Install virtualenv
-  ansible.builtin.pip:
-    name: "virtualenv"
+  ansible.builtin.apt:
+    name: python3-virtualenv
     state: present
-    executable: "{{ django_pip_executable }}"
+  become: true
+  become_user: root
   when: django_install_virtualenv
