@@ -59,6 +59,16 @@ django_setuptools_version:
 ## pipenv
 django_use_pipenv: false
 
+## uv (Astral)
+django_use_uv: false
+# Version of uv to install. Use "latest" or a pinned release like "0.6.10".
+# Pinning makes the install task's `creates:` idempotency check meaningful.
+django_uv_version: "latest"
+# Directory containing pyproject.toml + uv.lock. Defaults to the checkout root.
+django_uv_project_dir: "{{ django_checkout_path }}"
+# Flags passed to `uv sync`. Default mirrors prod intent: locked, prod-only.
+django_uv_sync_args: "--frozen --no-dev"
+
 ## dependency pip packages
 ## packages you'd want to install before install packages in the requirement's file
 django_dependency_pip_packages: []

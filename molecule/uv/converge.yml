@@ -1,0 +1,57 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+    - name: Update apt cache.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 600
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization.  # noqa: command-instead-of-module
+      ansible.builtin.command: systemctl is-system-running
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+  roles:
+    - role: onaio.django
+      django_python_version: "python3.12"
+      django_system_user: "sample_uv_app"
+      django_system_user_home: "/home/{{ django_system_user }}"
+      django_recreate_virtual_env: false
+      django_manage_services: false
+      django_codebase_path: "{{ django_system_user_home }}/app"
+      django_versioned_path: "{{ django_codebase_path }}-versioned"
+      django_checkout_path: "{{ django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
+      # Pull from the local fixture repo seeded in prepare.yml.
+      django_git_url: "/opt/sample-uv-project"
+      django_git_version: "main"
+      django_system_wide_dependencies:
+        - build-essential
+        - git
+      # uv mode
+      django_use_uv: true
+      django_use_regular_old_pip: false
+      django_use_pipenv: false
+      django_use_poetry: false
+      # Verify that the role's mode-agnostic extras-pip step still installs
+      # into the uv-created venv. tally-ho uses this for uwsgi; we use a
+      # tiny pure-python package here to keep the converge fast.
+      django_pip_packages:
+        - click
+      # Disable celery to keep the test surface minimal.
+      django_enable_celery: false
+      django_local_settings_path: "{{ django_checkout_path }}/sample/local_settings.py"
+      django_settings_module: "sample.settings"
+      django_wsgi_module: "sample.wsgi:application"
+      django_init_commands:
+      django_top_python_statements:
+        - import os
+      django_bottom_python_statements:
+        - SECRET_KEY = "molecule-fixture-not-a-real-secret"

@@ -33,3 +33,36 @@
   become: true
   become_user: root
   when: django_install_virtualenv
+
+- name: Install uv install-script prerequisites
+  ansible.builtin.apt:
+    name:
+      - curl
+      - ca-certificates
+    state: present
+    update_cache: true
+    cache_valid_time: 600
+  become: true
+  become_user: root
+  when: django_use_uv
+
+- name: Install uv (Astral)
+  vars:
+    # "latest" → unpinned URL (astral.sh/uv/install.sh), which the
+    # installer treats as latest. Anything else → pinned URL with the
+    # version segment (astral.sh/uv/<x.y.z>/install.sh).
+    _uv_installer_url: >-
+      {{
+        'https://astral.sh/uv/install.sh'
+        if django_uv_version == 'latest'
+        else 'https://astral.sh/uv/' ~ django_uv_version ~ '/install.sh'
+      }}
+  ansible.builtin.shell: |
+    set -eo pipefail
+    curl -LsSf {{ _uv_installer_url }} | env UV_INSTALL_DIR=/usr/local/bin sh
+  args:
+    executable: /bin/bash
+    creates: /usr/local/bin/uv
+  become: true
+  become_user: root
+  when: django_use_uv

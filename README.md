@@ -86,6 +86,34 @@ django_settings:
     }
 ```
 
+## uv (Astral) install mode
+
+The role can install Python dependencies via [uv](https://docs.astral.sh/uv/) instead of pip, pipenv, or poetry. This mode requires the consuming project to have a `pyproject.toml` and `uv.lock` checked in.
+
+Enable it by setting:
+
+```yml
+django_use_uv: true
+django_use_regular_old_pip: false
+django_use_pipenv: false
+django_use_poetry: false
+```
+
+When enabled, the role:
+
+1. Installs the `uv` binary to `/usr/local/bin/uv` on the host (idempotent — re-runs are no-ops).
+2. Runs `uv sync --frozen --no-dev --python {{ django_python_version }}` against `{{ django_uv_project_dir }}` (defaults to `{{ django_checkout_path }}`), with `UV_PROJECT_ENVIRONMENT={{ django_venv_path }}` so the resulting venv lands at the path the rest of the role (uwsgi, systemd units) expects.
+3. Continues to install `django_pip_packages` (uwsgi, celery, etc.) into the same venv via the role's existing pip step — no change there.
+
+Tunables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `django_use_uv` | `false` | Enable the uv install mode. |
+| `django_uv_version` | `"latest"` | Version installed via the astral.sh installer. Pin to e.g. `"0.6.10"` for reproducibility. |
+| `django_uv_project_dir` | `"{{ django_checkout_path }}"` | Directory containing `pyproject.toml` + `uv.lock`. |
+| `django_uv_sync_args` | `"--frozen --no-dev"` | Flags passed to `uv sync`. |
+
 ## Testing
 
 This project utilizes molecule for testing, the molecule tool can be installed by running `pip install 'molecule[docker]'` after which tests can run with `molecule test --all`
