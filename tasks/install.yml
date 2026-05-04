@@ -251,11 +251,11 @@
       uv pip install
       --python {{ django_venv_path }}/bin/python
       pip
+    creates: "{{ django_venv_path }}/bin/pip"
   environment:
     UV_LINK_MODE: copy
   become: true
   become_user: "{{ django_system_user }}"
-  changed_when: true
   when:
     - django_use_uv| bool
 

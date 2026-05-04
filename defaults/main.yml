@@ -62,7 +62,9 @@ django_use_pipenv: false
 ## uv (Astral)
 django_use_uv: false
 # Version of uv to install. Use "latest" or a pinned release like "0.6.10".
-# Pinning makes the install task's `creates:` idempotency check meaningful.
+# When pinned, bumping this value triggers a re-install on the next run
+# (the install task probes `uv --version` and compares to this string).
+# When set to "latest" the install task re-runs every play.
 django_uv_version: "latest"
 # Directory containing pyproject.toml + uv.lock. Defaults to the checkout root.
 django_uv_project_dir: "{{ django_checkout_path }}"
