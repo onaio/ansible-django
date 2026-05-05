@@ -33,3 +33,57 @@
   become: true
   become_user: root
   when: django_install_virtualenv
+
+- name: Install uv install-script prerequisites
+  ansible.builtin.apt:
+    name:
+      - curl
+      - ca-certificates
+    state: present
+    update_cache: true
+    cache_valid_time: 600
+  become: true
+  become_user: root
+  when: django_use_uv
+
+- name: Probe installed uv version
+  ansible.builtin.command: /usr/local/bin/uv --version
+  register: _uv_installed
+  failed_when: false
+  changed_when: false
+  become: true
+  become_user: root
+  when: django_use_uv
+
+- name: Install uv (Astral)
+  vars:
+    # "latest" → unpinned URL (astral.sh/uv/install.sh), which the
+    # installer treats as latest. Anything else → pinned URL with the
+    # version segment (astral.sh/uv/<x.y.z>/install.sh).
+    _uv_installer_url: >-
+      {{
+        'https://astral.sh/uv/install.sh'
+        if django_uv_version == 'latest'
+        else 'https://astral.sh/uv/' ~ django_uv_version ~ '/install.sh'
+      }}
+    # `uv --version` prints "uv X.Y.Z" on a single line. Split + last
+    # extracts the exact version string for an equality compare —
+    # avoids the substring footgun where "0.6.1" matches "0.6.10".
+    _uv_installed_version: >-
+      {{ (_uv_installed.stdout | default('')).split() | last
+         if (_uv_installed.stdout | default('') | length) > 0 else '' }}
+  ansible.builtin.shell: |
+    set -eo pipefail
+    curl -LsSf {{ _uv_installer_url }} | env UV_INSTALL_DIR=/usr/local/bin sh
+  args:
+    executable: /bin/bash
+  become: true
+  become_user: root
+  # The `when:` already gates execution on "installer would change
+  # something", so any time this task fires it really did install.
+  changed_when: true
+  when:
+    - django_use_uv
+    - _uv_installed.rc != 0
+      or django_uv_version == 'latest'
+      or _uv_installed_version != django_uv_version

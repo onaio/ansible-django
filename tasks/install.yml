@@ -225,6 +225,40 @@
   when:
     - django_use_pipenv| bool
 
+- name: Install Python packages using uv sync
+  ansible.builtin.command:
+    cmd: >-
+      uv sync
+      {{ django_uv_sync_args }}
+      --python {{ django_python_version }}
+    chdir: "{{ django_uv_project_dir }}"
+  environment:
+    UV_PROJECT_ENVIRONMENT: "{{ django_venv_path }}"
+    UV_LINK_MODE: copy
+    UV_COMPILE_BYTECODE: "1"
+  become: true
+  become_user: "{{ django_system_user }}"
+  changed_when: true
+  when:
+    - django_use_uv| bool
+
+# uv sync does not install pip into the venv (uv manages packages
+# directly). Bootstrap pip so the mode-agnostic extras-pip step below
+# (django_pip_packages: uwsgi, celery, ...) has a working pip binary.
+- name: Bootstrap pip into the uv-managed venv
+  ansible.builtin.command:
+    cmd: >-
+      uv pip install
+      --python {{ django_venv_path }}/bin/python
+      pip
+    creates: "{{ django_venv_path }}/bin/pip"
+  environment:
+    UV_LINK_MODE: copy
+  become: true
+  become_user: "{{ django_system_user }}"
+  when:
+    - django_use_uv| bool
+
 - name: Install other python packages using pip
   ansible.builtin.pip:
     name: "{{ django_pip_packages }}"

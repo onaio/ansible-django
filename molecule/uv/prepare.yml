@@ -1,0 +1,62 @@
+---
+# Stage the sample uv project as a local git repo on the molecule host so
+# the role's git-clone step has a reachable file:// URL to pull from. This
+# avoids depending on an external public repo for the test.
+- name: Prepare sample uv project on the molecule host
+  hosts: all
+  become: true
+  vars:
+    sample_repo_path: /opt/sample-uv-project
+    fixture_src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/tests/fixtures/sample-uv-project"
+  tasks:
+    - name: Install git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: true
+        cache_valid_time: 600
+
+    - name: Ensure sample project directory exists
+      ansible.builtin.file:
+        path: "{{ sample_repo_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy fixture files into the sample project directory
+      ansible.builtin.copy:
+        src: "{{ fixture_src }}/"
+        dest: "{{ sample_repo_path }}/"
+        mode: preserve
+
+    - name: Initialize git repo for the fixture
+      ansible.builtin.shell: |
+        set -eo pipefail
+        cd "{{ sample_repo_path }}"
+        if [ ! -d .git ]; then
+          git -c init.defaultBranch=main init -q
+          git -c user.email=molecule@example.com \
+              -c user.name=molecule \
+              -c commit.gpgsign=false \
+              add -A
+          git -c user.email=molecule@example.com \
+              -c user.name=molecule \
+              -c commit.gpgsign=false \
+              commit -q -m "fixture"
+        fi
+      args:
+        executable: /bin/bash
+      changed_when: true
+
+    # The role's git task runs as the django system user, but the fixture
+    # repo above was created as root. Modern git refuses to operate on
+    # repos with mismatched ownership; mark the fixture path as safe
+    # system-wide so the role's clone doesn't trip on it.
+    # Use `git config` directly: ansible.builtin has no git_config module,
+    # and pulling in community.general just for this molecule-fixture
+    # helper isn't worth the collection dep + CI lint plumbing.
+    # safe.directory='*' trusts every repo system-wide; safe inside a
+    # disposable molecule container, would not be acceptable in prod.
+    - name: Mark all directories as safe for git (molecule fixture only)  # noqa: command-instead-of-module
+      ansible.builtin.command:
+        cmd: git config --system --add safe.directory '*'
+      changed_when: true
