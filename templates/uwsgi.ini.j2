@@ -31,7 +31,9 @@ cheaper-step={{ django_wsgi_cheaper_spawn_rate }}
 cheaper-overload={{ django_wsgi_cheaper_overload }}
 {% endif %}
 {% if django_wsgi_static_map %}
-static-map={{ django_wsgi_static_map }}
+{# Rewrite any per-run checkout prefix to the effective release directory so
+   the rendered config is stable (and correct) on runs that skip the deploy. #}
+static-map={{ django_wsgi_static_map | replace(django_checkout_path, django_release_path) }}
 {% endif %}
 buffer-size={{ django_wsgi_buffer_size }}
 {% if django_wsgi_env %}
