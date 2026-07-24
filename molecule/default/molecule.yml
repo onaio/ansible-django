@@ -16,6 +16,12 @@ platforms:
       LANG: "C.UTF-8"
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      # Resolve the role under test from this checkout, not from a
+      # galaxy-installed copy in ~/.ansible/roles.
+      roles_path: >-
+        ${MOLECULE_PROJECT_DIRECTORY}/..:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles
 scenario:
   name: default
   test_sequence:
