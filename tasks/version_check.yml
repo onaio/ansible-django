@@ -1,0 +1,74 @@
+---
+- name: Resolve the desired git version to a commit SHA
+  ansible.builtin.shell: |
+    set -o pipefail
+    git ls-remote {{ django_git_url | quote }} \
+      "refs/heads/{{ django_git_version }}" \
+      "refs/tags/{{ django_git_version }}" \
+      "refs/tags/{{ django_git_version }}^{}" \
+      | tail -n1 | cut -f1
+  args:
+    executable: /bin/bash
+  environment:
+    GIT_SSH_COMMAND: >-
+      ssh -o StrictHostKeyChecking=accept-new{{ ' -i ' + django_system_user_home + '/.ssh/' + django_git_key_filename
+         if (django_git_key_content or django_git_key_ssh_file) else '' }}
+  register: django_ls_remote
+  changed_when: false
+  check_mode: false
+  become: true
+  become_user: "{{ django_system_user }}"
+
+- name: Set the desired deploy SHA
+  ansible.builtin.set_fact:
+    django_desired_sha: >-
+      {{ django_ls_remote.stdout | trim
+         if (django_ls_remote.stdout | trim | length) > 0
+         else django_git_version }}
+
+- name: Fail when the desired version cannot be resolved
+  ansible.builtin.fail:
+    msg: "Could not resolve version '{{ django_git_version }}' at {{ django_git_url }} to a commit SHA"
+  when: not (django_desired_sha is match('^[0-9a-f]{40}$'))
+
+- name: Check the current codebase link
+  ansible.builtin.stat:
+    path: "{{ django_codebase_path }}"
+  register: django_codebase_link
+
+- name: Read the deployed version marker
+  ansible.builtin.slurp:
+    src: "{{ django_codebase_path }}/.deployed_version"
+  register: django_version_marker
+  failed_when: false
+  when: django_codebase_link.stat.islnk | default(false)
+
+- name: Decide whether a deploy is needed
+  ansible.builtin.set_fact:
+    django_deploy_needed: >-
+      {{ django_force_deploy | bool
+         or django_recreate_virtual_env | bool
+         or not (django_codebase_link.stat.islnk | default(false))
+         or django_version_marker.content is not defined
+         or (django_version_marker.content | b64decode | trim) != django_desired_sha }}
+
+- name: Use the current release directory for this run
+  ansible.builtin.set_fact:
+    django_release_path: "{{ django_codebase_link.stat.lnk_source }}"
+  when: not (django_deploy_needed | bool)
+
+- name: Use a new release directory for this run
+  ansible.builtin.set_fact:
+    django_release_path: "{{ django_checkout_path }}"
+  when: django_deploy_needed | bool
+
+- name: Compute effective release paths
+  ansible.builtin.set_fact:
+    django_effective_local_settings_path: >-
+      {{ (django_local_settings_path | replace(django_checkout_path, django_release_path))
+         if django_local_settings_path else django_local_settings_path }}
+    django_effective_static_path: >-
+      {{ (django_static_path | replace(django_checkout_path, django_release_path))
+         if django_static_path else django_static_path }}
+    django_effective_pip_paths: >-
+      {{ django_pip_paths | map('replace', django_checkout_path, django_release_path) | list }}
