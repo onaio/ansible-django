@@ -11,10 +11,6 @@
     append: true
     createhome: true
 
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: "yes"
-
 - name: Install system-wide dependencies
   ansible.builtin.apt:
     name: "{{ django_system_wide_dependencies }}"
@@ -177,7 +173,7 @@
 - name: Install Poetry
   ansible.builtin.command:
     cmd: "{{ django_python_version }} /tmp/install-poetry.py"
-    creates: /tmp/install-poetry.py
+    creates: "{{ django_system_user_home }}/.local/bin/poetry"
   become: true
   become_user: "{{ django_system_user }}"
   environment:
@@ -187,7 +183,7 @@
 
 - name: Disable poetry virtualenv
   ansible.builtin.command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.create false"
-  changed_when: true
+  changed_when: false
   become: true
   become_user: "{{ django_system_user }}"
   when:
@@ -195,7 +191,7 @@
 
 - name: Set poetry virtualenv
   ansible.builtin.command: "{{ django_system_user_home }}/.local/bin/poetry config virtualenvs.path {{ django_system_user_home }}/.virtualenvs/"
-  changed_when: true
+  changed_when: false
   become: true
   become_user: "{{ django_system_user }}"
   when:
