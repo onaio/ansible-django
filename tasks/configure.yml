@@ -1,4 +1,12 @@
 ---
+# Tag-scoped runs (e.g. --tags config) skip install.yml, which normally
+# resolves the desired version and release paths. Re-run the version check
+# here when its facts are missing so configure tasks target the live release
+# instead of failing on undefined variables.
+- name: Determine whether a deploy is needed (config-scoped runs)
+  ansible.builtin.include_tasks: version_check.yml
+  when: django_desired_sha is not defined
+
 - name: Run Django init commands
   django_manage:
     command: "{{ item }}"
