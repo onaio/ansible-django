@@ -61,7 +61,10 @@
   ansible.builtin.known_hosts:
     path: "{{ django_system_user_home }}/.ssh/known_hosts"
     name: github.com
-    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    # Strip ssh-keyscan's "# host:port banner" comment lines: the banner
+    # varies per frontend, and including it makes the entry never match the
+    # file, so the task would report changed on every run.
+    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com 2>/dev/null | grep -v \"^#\"') }}"
   when:
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
