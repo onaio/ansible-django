@@ -181,8 +181,14 @@ django_celeryd_log_level: "INFO"
 django_celerybeat_log_level: "INFO"
 django_celeryd_pid_directory: "/run/celery-{{ django_system_user }}"
 django_celeryd_pid_file: "{{ django_celeryd_pid_directory }}/%n.pid"
-django_celery_beat_pid_directory: "/var/run/{{ django_system_user }}"
+# Beat's own runtime dir (matches its unit's RuntimeDirectory). Keeping the
+# pidfile out of the uwsgi unit's /run/<service> dir, which systemd wipes on
+# every uwsgi restart.
+django_celery_beat_pid_directory: "/run/celerybeat-{{ django_system_user }}"
 django_celery_beat_pid_file: "{{ django_celery_beat_pid_directory }}/celerybeat.pid"
 
 # Celery systemd service
 django_celeryd_timeoutsec: 100
+# Stop timeout for the celery worker unit: long enough to drain typical
+# tasks, finite so a wedged worker cannot stall deploy restarts forever.
+django_celeryd_stop_timeoutsec: 360

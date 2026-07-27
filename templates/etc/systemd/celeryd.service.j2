@@ -10,6 +10,10 @@ EnvironmentFile=-/etc/default/celeryd-{{ django_system_user }}
 WorkingDirectory={{ django_codebase_path }}
 RuntimeDirectory=celery-{{ django_system_user }}
 TimeoutStartSec={{ django_celeryd_timeoutsec }}
+# Give `celery multi stopwait` time to drain tasks; on expiry systemd
+# SIGKILLs the whole cgroup so no old master survives into the next start
+# and deletes the fresh pidfiles.
+TimeoutStopSec={{ django_celeryd_stop_timeoutsec }}
 ExecStart=/bin/sh -c '${CELERY_BIN} -A $CELERY_APP multi start $CELERYD_NODES \
     --logfile=${CELERYD_LOG_FILE} \
     --loglevel="${CELERYD_LOG_LEVEL}" \
