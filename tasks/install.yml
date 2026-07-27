@@ -45,7 +45,7 @@
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
     mode: "0600"
-  no_log: false
+  no_log: true
   check_mode: false
   when:
     - django_git_key_content is defined
@@ -57,7 +57,7 @@
     dest: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
     owner: "{{ django_system_user }}"
     mode: "0600"
-  no_log: false
+  no_log: true
   check_mode: false
   when:
     - django_git_key_ssh_file is defined
@@ -327,6 +327,8 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     mode: "0644"
+  # Rendered settings contain credentials; never print them under --diff.
+  diff: false
 
 - name: Copy the environment script
   ansible.builtin.template:
@@ -335,3 +337,5 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     mode: "0750"
+  # Environment scripts can carry secrets; keep them out of --diff output.
+  diff: false
