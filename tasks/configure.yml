@@ -1,8 +1,16 @@
 ---
+# Tag-scoped runs (e.g. --tags config) skip install.yml, which normally
+# resolves the desired version and release paths. Re-run the version check
+# here when its facts are missing so configure tasks target the live release
+# instead of failing on undefined variables.
+- name: Determine whether a deploy is needed (config-scoped runs)
+  ansible.builtin.include_tasks: version_check.yml
+  when: django_desired_sha is not defined
+
 - name: Run Django init commands
   django_manage:
     command: "{{ item }}"
-    app_path: "{{ django_checkout_path }}"
+    app_path: "{{ django_release_path }}"
     virtualenv: "{{ django_venv_path }}"
   with_items: "{{ django_init_commands }}"
   become: true
@@ -13,7 +21,7 @@
 
 - name: Make sure the static folder exists
   ansible.builtin.file:
-    path: "{{ django_static_path }}"
+    path: "{{ django_effective_static_path }}"
     state: directory
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
@@ -33,9 +41,18 @@
     - django_media_path is defined
     - django_media_path is not none
 
+- name: Record the deployed version
+  ansible.builtin.copy:
+    content: "{{ django_desired_sha }}\n"
+    dest: "{{ django_release_path }}/.deployed_version"
+    owner: "{{ django_system_user }}"
+    group: "{{ django_system_group }}"
+    mode: "0644"
+  become: true
+
 - name: Make the new codebase current
   ansible.builtin.file:
-    src: "{{ django_checkout_path }}"
+    src: "{{ django_release_path }}"
     dest: "{{ django_codebase_path }}"
     state: link
     force: true
@@ -51,7 +68,7 @@
 - name: Copy uwsgi.ini
   ansible.builtin.template:
     src: uwsgi.ini.j2
-    dest: "{{ django_checkout_path }}/uwsgi.ini"
+    dest: "{{ django_release_path }}/uwsgi.ini"
     mode: "0644"
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"

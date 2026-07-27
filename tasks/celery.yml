@@ -5,7 +5,7 @@
     owner: "{{ django_system_user }}"
     group: "{{ django_system_group }}"
     path: "{{ item }}"
-    mode: "0644"
+    mode: "0755"
   when:
     - item is defined
     - item is not none

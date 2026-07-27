@@ -41,3 +41,12 @@ def test_local_settings(host):
     assert local_settings.user == "django_example_app"
     assert local_settings.group == "www-data"
     assert local_settings.mode == 0o644
+
+
+def test_versioned_release_marker(host):
+    app = host.file("/home/django_example_app/app")
+    assert app.is_symlink
+
+    marker = host.file("/home/django_example_app/app/.deployed_version")
+    assert marker.exists
+    assert len(marker.content_string.strip()) == 40

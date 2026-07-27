@@ -8,7 +8,9 @@ User={{ django_system_user }}
 Group={{ django_system_group }}
 EnvironmentFile=-/etc/default/celerybeat-{{ django_system_user }}
 WorkingDirectory={{ django_codebase_path }}
-RuntimeDirectory=celery-{{ django_system_user }}
+# Own runtime dir: sharing celeryd's would let this unit's stop/start wipe
+# the worker pidfiles (systemd removes a RuntimeDirectory on unit stop).
+RuntimeDirectory=celerybeat-{{ django_system_user }}
 ExecStart=/bin/sh -c '${CELERY_BIN} -A $CELERY_APP \
     --workdir={{ django_codebase_path }} beat \
     --pidfile=${CELERYBEAT_PID_FILE} \

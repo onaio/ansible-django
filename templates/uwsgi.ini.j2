@@ -13,8 +13,8 @@ master={{ django_wsgi_master }}
 processes={{ django_wsgi_processes }}
 pidfile={{ django_pid_file }}
 vacuum={{ django_wsgi_vacuum }}                # clear environment on exit
-harakiri={{ django_wsgi_harakiri }}            # respawn processes taking more than 240 seconds
-max-requests={{ django_wsgi_max_requests }}    # respawn processes after serving 5000 requests
+harakiri={{ django_wsgi_harakiri }}            # respawn processes taking more than this many seconds
+max-requests={{ django_wsgi_max_requests }}    # respawn processes after serving this many requests
 logto={{ django_wsgi_logto }}
 virtualenv={{ django_wsgi_virtualenv }}
 {% if django_wsgi_use_cheaper %}
@@ -31,7 +31,9 @@ cheaper-step={{ django_wsgi_cheaper_spawn_rate }}
 cheaper-overload={{ django_wsgi_cheaper_overload }}
 {% endif %}
 {% if django_wsgi_static_map %}
-static-map={{ django_wsgi_static_map }}
+{# Rewrite any per-run checkout prefix to the effective release directory so
+   the rendered config is stable (and correct) on runs that skip the deploy. #}
+static-map={{ django_wsgi_static_map | replace(django_checkout_path, django_release_path) }}
 {% endif %}
 buffer-size={{ django_wsgi_buffer_size }}
 {% if django_wsgi_env %}
