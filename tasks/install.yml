@@ -35,6 +35,10 @@
     - "{{ django_log_path }}"
     - "{{ django_system_user_home }}/.ssh"
 
+# The git key tasks (copy here, removal at the end of this file) run for
+# real even under --check: the version check's ls-remote needs a working key
+# on the host to evaluate state, and the removal guarantees check runs clean
+# up after themselves just like real runs.
 - name: Copy git key from string
   ansible.builtin.copy:
     content: "{{ django_git_key_content }}"
@@ -42,6 +46,7 @@
     owner: "{{ django_system_user }}"
     mode: "0600"
   no_log: false
+  check_mode: false
   when:
     - django_git_key_content is defined
     - django_git_key_content is not none
@@ -53,6 +58,7 @@
     owner: "{{ django_system_user }}"
     mode: "0600"
   no_log: false
+  check_mode: false
   when:
     - django_git_key_ssh_file is defined
     - django_git_key_ssh_file is not none
@@ -299,6 +305,8 @@
     path: "{{ django_system_user_home }}/.ssh/{{ django_git_key_filename }}"
   become: true
   become_user: "{{ django_system_user }}"
+  # Real removal in --check too, so check runs clean up the key they copied.
+  check_mode: false
   when:
     - django_git_key_content is defined or django_git_key_ssh_file is defined
     - django_git_key_content is not none or django_git_key_ssh_file is not none
